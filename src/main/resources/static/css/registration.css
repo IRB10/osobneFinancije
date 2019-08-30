@@ -1,0 +1,30 @@
+.shape8 {
+    position: relative;
+    height: 630px;
+    width: 470px;
+    background-color: #343a40;
+    border-radius: 80px;
+    float: left;
+    margin-right: -50px;
+}
+
+html, body {
+    height: 100%;
+}
+
+#wrap {
+    min-height: 100%;
+}
+
+#main {
+    overflow: auto;
+    padding-bottom: 150px;
+}
+
+.registerLabel {
+    color: #ff8400
+}
+
+.registerButton {
+    background-color: #ff8400
+}

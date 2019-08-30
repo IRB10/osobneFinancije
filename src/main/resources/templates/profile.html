@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+<!-- Include _menu.html -->
+<th:block th:include="/_menu"></th:block>
+
+<div class="container">
+    <div id="login-row" class="row justify-content-center align-items-center">
+        <div id="login-column" class="col-md-6">
+            <div class="wrap">
+                <div class="container clear-top">
+                    <form class="form" th:action="@{/user/profile}" th:object="${user}" method="POST" enctype="utf8">
+                        <h1 th:text="#{label.menu.edit.profile}"></h1>
+                        <div class="form-group">
+                            <label class="registerLabel"><b th:text="#{label.user.firstName}"></b></label>
+                            <input th:field="*{firstName}" name="firstName" class="form-control"/>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}">
+                                <p th:each="error : ${#fields.errors('firstName')}" th:text="${error}">Validation
+                                    error</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="registerLabel"><b th:text="#{label.user.lastName}"></b></label>
+                            <input th:field="*{lastName}" name="lastName" class="form-control"/>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}">
+                                <p th:each="error : ${#fields.errors('lastName')}" th:text="${error}">Validation
+                                    error</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="registerLabel"><b th:text="#{label.user.email}"></b></label>
+                            <input type="email" th:field="*{email}" name="email" class="form-control"/>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
+                                <p th:each="error : ${#fields.errors('email')}" th:text="${error}">Validation error</p>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-info btn-md loginSignIn"
+                                    th:text="#{messages.form.update}">
+                                submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

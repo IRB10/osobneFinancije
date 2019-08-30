@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title>Prijava</title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<div class="alert alert-danger" th:if="${errorPoruka}"  th:text="${errorPoruka}"></div>
+<div class="container">
+    <div id="login-row" class="row justify-content-center align-items-center">
+        <div id="login-column" class="col-md-6">
+            <div>
+                    <form name="f" th:action="@{/login}" method="post" th:object="${user}">
+                        <div class="form-group" id="div1">
+                            <label for="username" class="loginLabel"><b
+                                    th:text="#{label.user.userName}"></b></label><br>
+                            <input type="text" name="username" id="username" class="form-control">
+                        </div>
+                        <div class="form-group" id="div2">
+                            <label for="password" class="loginLabel"><b
+                                    th:text="#{label.user.password}"></b></label><br>
+                            <input type="password" name="password" id="password" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="submit" class="btn btn-info btn-md"
+                                   th:value="#{label.login.signIn}">
+                            <a class="btn btn-default" th:href="@{/forgotPassword}" th:text="#{message.resetPassword}">reset</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

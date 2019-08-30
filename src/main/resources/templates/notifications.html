@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{label.notifications.old}"></title>
+</head>
+<body>
+<!-- Include _menu.html -->
+<th:block th:include="/_menu"></th:block>
+<div class="container">
+    <div th:if="${notificationList != null}">
+        <table class="table table-striped">
+            <tr>
+                <th>Message</th>
+            </tr>
+            <tr th:each="notification : ${notificationList}">
+                <td th:text="${notification.poruka}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

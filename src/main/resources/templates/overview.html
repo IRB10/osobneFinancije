@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{messages.add.obligations}"></title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<div class="container">
+    <div class="container clear-top">
+        <div class="alert alert-danger" th:if="${errorImport != null}">
+            <p th:text="${errorImport}">Validation error</p>
+        </div>
+    </div>
+    <div class="container clear-top">
+        <div class="alert bg-success" th:if="${notificationImport != null}">
+            <p th:text="${notificationImport}">Validation error</p>
+        </div>
+    </div>
+    <div th:if="${obligationList != null}">
+        <table class="table table-striped">
+            <tr>
+                <th th:text="#{label.obligation.name}"></th>
+                <th th:text="#{label.obligation.amount}"></th>
+                <th th:text="#{label.obligation.details}"></th>
+                <th th:text="#{label.user.date}"></th>
+                <th th:text="#{label.user.transaction.from}"></th>
+                <th th:text="#{label.user.transaction.to}"></th>
+            </tr>
+            <tr th:each="obligation : ${obligationList}">
+                <td th:text="${obligation.naziv}"></td>
+                <td th:text="${obligation.vrijednost}"></td>
+                <td th:text="${obligation.opis}"></td>
+                <td th:text="${obligation.danPlacanja}"></td>
+                <td th:text="${obligation.transakcijaOd}"></td>
+                <td th:text="${obligation.transakcijaPrema}"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="container">
+        <form th:action="@{/user/csvData}" method="POST" target="_blank">
+            <div class="form-group">
+                <button type="submit" id="export" name="export" class="btn btn-info btn-md loginSignIn"
+                        th:text="#{label.export.csv}">
+                    submit
+                </button>
+            </div>
+        </form>
+        <form th:action="@{/user/csvDataImport}" method="POST" enctype="multipart/form-data">
+            <input type="file" th:name="file">
+            <div class="form-group">
+                <button type="submit" id="import" name="import" class="btn btn-info btn-md loginSignIn"
+                        th:text="#{label.import.csv}">
+                    submit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

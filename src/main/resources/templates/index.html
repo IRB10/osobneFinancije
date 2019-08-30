@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{label.home.title}"></title>
+</head>
+<body>
+<!-- Include _menu.html -->
+<th:block th:include="/_menu"></th:block>
+<div class="main">
+<h2 th:text="#{label.home.personal.finance}"></h2>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

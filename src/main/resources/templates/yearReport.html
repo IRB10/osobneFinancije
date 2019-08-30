@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{label.reports.year}"></title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<div class="container">
+    <div class="form-group">
+        <div th:if="${obligationList != null}">
+            <table class="table table-striped">
+                <tr>
+                    <th th:text="#{label.obligation.name}"></th>
+                    <th th:text="#{label.obligation.amount}"></th>
+                    <th th:text="#{label.obligation.details}"></th>
+                    <th th:text="#{label.user.date}"></th>
+                    <th th:text="#{label.user.transaction.from}"></th>
+                    <th th:text="#{label.user.transaction.to}"></th>
+                </tr>
+                <tr th:each="obligation : ${obligationList}">
+                    <td th:text="${obligation.naziv}"></td>
+                    <td th:text="${obligation.vrijednost}"></td>
+                    <td th:text="${obligation.opis}"></td>
+                    <td th:text="${obligation.danPlacanja}"></td>
+                    <td th:text="${obligation.transakcijaOd}"></td>
+                    <td th:text="${obligation.transakcijaPrema}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

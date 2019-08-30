@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{label.reports.month}"></title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<div class="container">
+    <form class="form" th:action="@{/user/monthReport}" method="POST" enctype="utf8">
+        <div class="form-group">
+            <div th:if="${obligationList != null}">
+                <table class="table table-striped">
+                    <tr>
+                        <th th:text="#{label.obligation.name}"></th>
+                        <th th:text="#{label.obligation.amount}"></th>
+                        <th th:text="#{label.obligation.details}"></th>
+                        <th th:text="#{label.user.date}"></th>
+                        <th th:text="#{label.user.transaction.from}"></th>
+                        <th th:text="#{label.user.transaction.to}"></th>
+                    </tr>
+                    <tr th:each="obligation : ${obligationList}">
+                        <td th:text="${obligation.naziv}"></td>
+                        <td th:text="${obligation.vrijednost}"></td>
+                        <td th:text="${obligation.opis}"></td>
+                        <td th:text="${obligation.danPlacanja}"></td>
+                        <td th:text="${obligation.transakcijaOd}"></td>
+                        <td th:text="${obligation.transakcijaPrema}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="registerLabel"><b th:text="#{label.user.month}"></b></label>
+            <select class="form-control" id="month" name="month">
+                <option value=''>------</option>
+                <option value='1' th:text="#{label.months.first}">January</option>
+                <option value='2' th:text="#{label.months.second}">February</option>
+                <option value='3' th:text="#{label.months.third}">March</option>
+                <option value='4' th:text="#{label.months.fourth}">April</option>
+                <option value='5' th:text="#{label.months.fifth}">May</option>
+                <option value='6' th:text="#{label.months.sixth}">June</option>
+                <option value='7' th:text="#{label.months.seventh}">July</option>
+                <option value='8' th:text="#{label.months.eight}">August</option>
+                <option value='9' th:text="#{label.months.nineth}">September</option>
+                <option value='10' th:text="#{label.months.tenth}">October</option>
+                <option value='11' th:text="#{label.months.eleventh}">November</option>
+                <option value='12' th:text="#{label.months.twelfth}">December</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-info btn-md loginSignIn" th:text="#{label.choose.month}">
+                submit
+            </button>
+        </div>
+    </form>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

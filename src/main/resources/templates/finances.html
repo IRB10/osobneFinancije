@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{label.menu.finances}"></title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<div class="container bg-dark">
+    <h1 th:text="#{label.add.income}" class="registerLabel">reset</h1><br/>
+    <div class="container clear-top">
+        <div class="alert-info" th:if="${message != null}">
+            <p th:text="${message}">Validation error</p>
+        </div>
+    </div>
+    <div class="container clear-top">
+        <div class="alert-danger" th:if="${messageError != null}">
+            <p th:text="${messageError}">Validation error</p>
+        </div>
+    </div>
+    <div class="row">
+        <form th:action="@{/user/addIncome}" th:object="${finances}" th:class="form" method="post">
+            <div class="form-group">
+                <label class="registerLabel"><b th:text="#{label.user.income}"></b></label>
+                <input th:field="*{income}" class="form-control"/>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('income')}">
+                    <p th:text="${messageError}">Validation error</p>
+                </div>
+                <div style="display: inline">
+                    <select class="form-control" th:field="${finances.kategorija}" >
+                        <option th:each="kategorija : ${kategorije}" th:value="${kategorija.id}" th:text="${kategorija.naziv}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" th:text="#{label.add.income}">reset</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container bg-secondary expsenseForm">
+    <h1 th:text="#{label.add.expense}" class="registerLabel">reset</h1><br/>
+    <div class="container clear-top">
+        <div class="alert-info" th:if="${messageExpense != null}">
+            <p th:text="${messageExpense}">Validation error</p>
+        </div>
+    </div>
+    <div class="container clear-top">
+        <div class="alert-danger" th:if="${messageErrorExpense != null}">
+            <p th:text="${messageErrorExpense}">Validation error</p>
+        </div>
+    </div>
+    <div class="row">
+        <form th:action="@{/user/addExpense}" th:object="${finances}" th:class="form" method="post">
+            <div class="form-group">
+                <label class="registerLabel"><b th:text="#{label.user.expense}"></b></label>
+                <input th:field="*{expense}" class="form-control"/>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('expense')}">
+                    <p th:text="${messageErrorExpense}">Validation error</p>
+                </div>
+                <div style="display: inline">
+                    <select class="form-control" th:field="${finances.kategorija}" >
+                        <option th:each="kategorija : ${kategorije}" th:value="${kategorija.id}" th:text="${kategorija.naziv}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" th:text="#{label.add.expense}">reset</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <a class="container expsenseForm btn btn-primary" th:href="@{/user/Obligations}">
+        <button type="button" class="btn btn-primary" th:text="#{messages.add.obligations}">reset</button>
+    </a>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

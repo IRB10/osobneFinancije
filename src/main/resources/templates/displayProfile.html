@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{label.profile.view}"></title>
+</head>
+<body>
+<!-- Include _menu.html -->
+<th:block th:include="/_menu"></th:block>
+
+<div class="container">
+    <div id="login-row" class="row justify-content-center align-items-center">
+        <div id="login-column" class="col-md-6">
+            <div class="wrap">
+                <div class="container clear-top">
+                    <form class="form" th:action="@{/user/profile}" th:object="${user}" method="GET" enctype="utf8">
+                        <h1 th:text="#{label.profile.view}"></h1>
+                        <div class="form-group">
+                            <label class="registerLabel"><b th:text="#{label.user.userName}"></b></label>
+                            <label class="form-control"><b th:text="*{username}"></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="registerLabel"><b th:text="#{label.user.firstName}"></b></label>
+                            <label class="form-control"><b th:text="*{firstName}"></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="registerLabel"><b th:text="#{label.user.lastName}"></b></label>
+                            <label class="form-control"><b th:text="*{lastName}"></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="registerLabel"><b th:text="#{label.user.email}"></b></label>
+                            <label class="form-control"><b th:text="*{email}"></b></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="registerLabel"><b th:text="#{label.user.balance}"></b></label>
+                            <label class="form-control"><b th:text="*{balance}"></b></label>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-info btn-md loginSignIn" th:text="#{label.menu.edit.profile}">
+                                submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

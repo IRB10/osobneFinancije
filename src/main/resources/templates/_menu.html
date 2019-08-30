@@ -1,0 +1,115 @@
+<div xmlns:th="http://www.thymeleaf.org" style="border: 1px solid #ccc;padding:5px;margin-bottom:50px;">
+    <nav xmlns:th="http://www.thymeleaf.org" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="https://www.ecx.io/en/">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <li class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" th:href="@{/}" th:if="${#request.userPrincipal == null}"
+                           th:text="#{label.menu.home}">
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" th:if="${#request.userPrincipal != null}" th:href="@{/user/home}"
+                           th:text="#{label.menu.home}">
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:if="${#request.userPrincipal == null}" th:href="@{/login}"
+                           th:text="#{label.menu.login}"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:if="${#request.userPrincipal == null}" th:href="@{/registration}"
+                           th:text="#{label.menu.register}"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:if="${#request.userPrincipal != null}" th:href="@{/user/ProfileDetails}"
+                           th:text="#{label.menu.profile}"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:if="${#request.userPrincipal != null}" th:href="@{/user/Finances}"
+                           th:text="#{label.menu.finances}"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:if="${#request.userPrincipal != null}" th:href="@{/user/Accounts}"
+                           th:text="#{label.menu.accounts}"></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" th:if="${#request.userPrincipal != null}"
+                           data-toggle="dropdown" role="button" aria-haspopup="true" th:text="#{label.reports}"
+                           aria-expanded="false">
+                        </a>
+                        <ul class="dropdown-menu notify-drop bg-dark">
+                            <div class="notify-drop-title">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{/user/monthReport}" th:text="#{label.reports.month}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{/user/yearReport}" th:text="#{label.reports.year}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{/user/pdfReport}" th:text="#{label.reports.pdf}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" th:if="${#request.userPrincipal != null}"
+                           data-toggle="dropdown" role="button" aria-haspopup="true" th:text="#{label.notification}"
+                           aria-expanded="false">
+                        </a>
+                        <ul class="dropdown-menu notify-drop bg-dark">
+                            <div class="notify-drop-title">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{/user/oldNotifications}" th:text="#{label.notifications.old}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{/user/newNotifications}" th:text="#{label.notifications.new}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:if="${#request.userPrincipal != null}" th:href="@{/logout}"
+                           th:text="#{label.menu.logout}"></a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" th:text="#{label.language}" aria-expanded="false">
+                        </a>
+                        <ul class="dropdown-menu notify-drop bg-dark">
+                            <div class="notify-drop-title">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{${#httpServletRequest.requestURI}(lang=en)}"
+                                           th:text="#{lang.eng}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{${#httpServletRequest.requestURI}(lang=hr)}" th:text="#{lang.hr}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </div>
+    </nav>
+</div>

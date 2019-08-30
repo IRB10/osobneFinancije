@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{label.welcome.title}"></title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<div class="container" style="min-height: 500px">
+    <div class="starter-template">
+        <div id="feedback"></div>
+        <table id="added-articles" class="table .table-bordered">
+            <thead>
+            <tr class="thead-dark">
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Payment day</th>
+                <th>Details</th>
+                <th>Transaction from</th>
+                <th>Transaction to</th>
+            </tr>
+            </thead>
+        </table>
+
+        <form class="form-horizontal" id="search-form">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" id="bth-search" class="btn btn-primary btn-lg" th:text="#{label.get.obligations}">Search
+                    </button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="container bg-dark">
+        <h1 th:text="#{messages.add.obligations}" class="registerLabel">reset</h1><br/>
+        <div class="form-control alert alert-danger" id="postResultDiv"></div>
+        <div class="row">
+            <form th:class="form" id="obligationForm" method="post">
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.obligation.name}"></b></label>
+                    <input id="obligation0" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.user.value}"></b></label>
+                    <input id="obligation1" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.user.date}"></b></label>
+                    <input id="obligation2" type="datetime-local" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.obligation.details}"></b></label>
+                    <textarea id="obligation3" type="" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.user.transaction.from}"></b></label>
+                    <input id="obligation4" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.user.transaction.to}"></b></label>
+                    <input id="obligation5" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit" id="bth-add" th:text="#{messages.add.obligations}">reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

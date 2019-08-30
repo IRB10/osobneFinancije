@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{messages.error}"></title>
+</head>
+<body>
+<div class="container">
+    <div class="wrap">
+        <div class="container clear-top" th:switch="${statusCode}">
+            <th:block th:include="/_menu"></th:block>
+            <div th:case="'404'">
+                <h1 th:text="#{messages.went.wrong.p}"></h1>
+                <h2 th:text="#{messages.on.it}"></h2>
+            </div>
+            <div th:case="'500'">
+                <h1 th:text="#{messages.went.wrong.c}"></h1>
+                <h2 th:text="#{messages.on.it}"></h2>
+            </div>
+            <div th:case="*">
+                <h1 th:text="#{messages.went.wrong}"></h1>
+                <h2 th:text="#{messages.on.it}"></h2>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

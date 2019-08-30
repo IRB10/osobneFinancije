@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{message.regConfirm}"></title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<div class="container">
+    <div class="wrap">
+        <div class="container clear-top">
+            <div class="alert alert-danger" th:if="${message != null}">
+                <p th:text="${message}">Validation error</p>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

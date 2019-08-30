@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{label.create.account}"></title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+
+<div class="container bg-dark">
+    <h1 th:text="#{label.create.account}" class="registerLabel">reset</h1><br/>
+    <div class="container clear-top">
+        <div class="alert-info" th:if="${message != null}">
+            <p th:text="${message}">Validation error</p>
+        </div>
+    </div>
+    <div class="row">
+        <form th:action="@{/user/createAccount}" th:object="${racunForm}" th:class="form" method="post">
+            <div class="form-group">
+                <label class="registerLabel"><b th:text="#{label.createAccount.description}"></b></label>
+                <input th:field="*{opisRacuna}" class="form-control"/>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('opisRacuna')}">
+                    <p th:text="${messageError}">Validation error</p>
+                </div>
+                <div style="display: inline">
+                    <label class="registerLabel"><b th:text="#{label.createAccount.accountType}"></b></label>
+                    <select name="vrstaRacuna">
+                        <option th:each="vrsta : ${T(com.diplomski.osobneFinancije.utils.VrstaRacuna).values()}"
+                                th:value="${vrsta}"
+                                th:text="${vrsta}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" th:text="#{label.create.account}">reset</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>

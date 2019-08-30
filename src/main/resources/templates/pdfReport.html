@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="/_header"></th:block>
+    <meta charset="UTF-8">
+    <title th:text="#{label.reports.month}"></title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<div class="container">
+    <form class="form" th:action="@{/user/pdfReport}" method="POST" target="_blank" enctype="utf8">
+        <div class="form-group">
+            <label class="registerLabel"><b th:text="#{label.pdf.from}"></b></label>
+            <input type="datetime-local" class="form-control" name="dateFrom"/>
+        </div>
+        <div class="form-group">
+            <label class="registerLabel"><b th:text="#{label.pdf.to}"></b></label>
+            <input type="datetime-local" class="form-control" name="dateTo"/>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-info btn-md loginSignIn" th:text="#{label.generate.pdf}">
+                submit
+            </button>
+        </div>
+    </form>
+</div>
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>
