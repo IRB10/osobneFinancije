@@ -1,5 +1,6 @@
 package com.diplomski.osobneFinancije.entiteti
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 
@@ -16,7 +17,7 @@ data class VerifikacijskiToken(
 
     var datumIsteka: Date? = null
 ) {
-
+    @JsonIgnore
     @OneToOne(targetEntity = Korisnik::class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "korisnik_id", foreignKey = ForeignKey(name = "FK_VERIFY_USER"))
     var korisnik: Korisnik? = null

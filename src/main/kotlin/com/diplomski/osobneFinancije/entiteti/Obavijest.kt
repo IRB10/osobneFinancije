@@ -1,5 +1,6 @@
 package com.diplomski.osobneFinancije.entiteti
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 
@@ -15,7 +16,7 @@ data class Obavijest(
 
     var procitano: Boolean = false
 ) {
-
+    @JsonIgnore
     @ManyToOne
     lateinit var korisnik: Korisnik
 

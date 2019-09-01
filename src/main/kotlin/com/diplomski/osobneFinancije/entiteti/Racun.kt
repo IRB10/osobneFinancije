@@ -1,6 +1,7 @@
 package com.diplomski.osobneFinancije.entiteti
 
 import com.diplomski.osobneFinancije.forme.RacunForma
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 
@@ -14,9 +15,11 @@ data class Racun(
     var aktivan: Boolean? = false,
     var vrstaRacuna: String? = ""
 ) {
+    @JsonIgnore
     @OneToMany(mappedBy = "racun_id")
     val prijenosi: MutableSet<Prijenos> = HashSet()
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE], mappedBy = "racuni")
     var korisnici: MutableSet<Korisnik> = HashSet()
 }
