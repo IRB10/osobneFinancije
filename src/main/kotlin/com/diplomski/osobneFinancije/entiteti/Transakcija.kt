@@ -1,7 +1,6 @@
 package com.diplomski.osobneFinancije.entiteti
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import java.sql.Timestamp
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -18,6 +17,7 @@ data class Transakcija(
     @JsonIgnore
     var datumKreiranja: LocalDateTime? = null,
     var naziv: String? = "",
+    @JsonIgnore
     var danPlacanja: LocalDateTime? = null
 ) {
     @JsonIgnore
@@ -32,7 +32,12 @@ data class Transakcija(
     @OneToMany(mappedBy = "transakcija_id")
     val prijenosi: MutableSet<Prijenos> = HashSet()
 
-    constructor(vrijednost: Double, datumKreiranja: LocalDateTime, kategorija_id: Kategorija, korisnik_id: Korisnik) : this(
+    constructor(
+        vrijednost: Double,
+        datumKreiranja: LocalDateTime,
+        kategorija_id: Kategorija,
+        korisnik_id: Korisnik
+    ) : this(
         vrijednost = vrijednost,
         datumKreiranja = datumKreiranja
     ) {
@@ -40,7 +45,7 @@ data class Transakcija(
         this.korisnik = korisnik_id
     }
 
-    constructor(naziv: String?) : this(){
+    constructor(naziv: String?) : this() {
         this.naziv = naziv
     }
 }

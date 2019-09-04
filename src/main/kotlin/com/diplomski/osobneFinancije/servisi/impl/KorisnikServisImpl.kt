@@ -1,11 +1,14 @@
 package com.diplomski.osobneFinancije.servisi.impl
 
+import com.amazonaws.services.lambda.AWSLambdaClientBuilder
+import com.amazonaws.services.lambda.invoke.LambdaInvokerFactory
 import com.diplomski.osobneFinancije.entiteti.*
 import com.diplomski.osobneFinancije.forme.FinancesForm
 import com.diplomski.osobneFinancije.forme.ProfileForm
 import com.diplomski.osobneFinancije.forme.RacunForma
 import com.diplomski.osobneFinancije.forme.RegisterForm
 import com.diplomski.osobneFinancije.repozitoriji.*
+import com.diplomski.osobneFinancije.servisi.FinancijeServis
 import com.diplomski.osobneFinancije.servisi.KorisnikServis
 import com.diplomski.osobneFinancije.servisi.NotificationService
 import com.diplomski.osobneFinancije.utils.GeneratorPdfIzvjesca
@@ -29,6 +32,7 @@ import java.io.ByteArrayInputStream
 import java.time.LocalDateTime
 import java.util.*
 import java.util.stream.Collectors
+import kotlin.collections.ArrayList
 
 
 @Service
@@ -44,6 +48,20 @@ class KorisnikServisImpl(
     private val notificationService: NotificationService,
     @param:Qualifier("messageSource") private val poruke: MessageSource
 ) : KorisnikServis {
+
+    val financijeServis = LambdaInvokerFactory.builder()
+        .lambdaClient(AWSLambdaClientBuilder.defaultClient())
+        .build(FinancijeServis::class.java)
+
+    override fun dohvatiSveRacuneDostupneKorisniku(): List<Racun> {
+        val listaRacuna = ArrayList<Racun>()
+        for (racun in racunRepozitorij.findAll()){
+            if (!racun.korisnici.contains(korisnikRepozitorij.findByKorisnickoIme(SecurityContextHolder.getContext().authentication.name))){
+                listaRacuna.add(racun)
+            }
+        }
+        return listaRacuna
+    }
 
     override fun azurirajTransakciju(transakcija: Transakcija) {
         if (!ObjectUtils.isEmpty(transakcijaRepozitorij.findByNaziv(transakcija.naziv!!))) {
@@ -153,13 +171,15 @@ class KorisnikServisImpl(
     }
 
     override fun updateExpense(korisnik: Korisnik, expense: Float?, kategorija: Kategorija) {
-        korisnik.stanjeRacuna -= expense!!
+        val response = financijeServis.lambdaOutput(LambdaInput(korisnik.stanjeRacuna, expense!!.toDouble(), "-"))
+        korisnik.stanjeRacuna = response.result
         createEntry("Expense - " + korisnik.id, Math.abs(expense), korisnik.korisnickoIme, kategorija)
         korisnikRepozitorij.save(korisnik)
     }
 
     override fun updateIncome(korisnik: Korisnik, income: Float?, kategorija: Kategorija) {
-        korisnik.stanjeRacuna += income!!
+        val response = financijeServis.lambdaOutput(LambdaInput(korisnik.stanjeRacuna, income!!.toDouble(), "+"))
+        korisnik.stanjeRacuna = response.result
         createEntry("Income - " + korisnik.id, Math.abs(income), korisnik.korisnickoIme, kategorija)
         korisnikRepozitorij.save(korisnik)
     }

@@ -98,7 +98,7 @@ class FinancijeKontrolor(
         val financesForm = FinancesForm()
         model.addAttribute("obligation", financesForm)
         model.addAttribute("kategorije", kategorijaRepozitorij.findAll())
-        model.addAttribute("racuni", korisnikServis.dohvatiSveRacune())
+        model.addAttribute("racuni", korisnikServis.dohvatiSveRacuneDostupneKorisniku())
         return displayObligations
     }
 
@@ -110,7 +110,7 @@ class FinancijeKontrolor(
         val locale = request.locale
         val modelAndView = ModelAndView(displayObligations, displayObligations, financesForm)
         modelAndView.addObject("kategorije", kategorijaRepozitorij.findAll())
-        modelAndView.addObject("racuni", korisnikServis.dohvatiSveRacune())
+        modelAndView.addObject("racuni", korisnikServis.dohvatiSveRacuneDostupneKorisniku())
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("messageError", messages.getMessage("message.obligation.value.failed", null, locale))
         } else if (!checkFinanceForm(financesForm)) {

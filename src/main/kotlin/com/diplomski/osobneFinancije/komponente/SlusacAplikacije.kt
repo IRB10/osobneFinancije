@@ -1,5 +1,10 @@
 package com.diplomski.osobneFinancije.komponente
 
+import com.amazonaws.services.lambda.AWSLambdaClientBuilder
+import com.amazonaws.services.lambda.invoke.LambdaInvokerFactory
+import com.diplomski.osobneFinancije.entiteti.ReportInput
+import com.diplomski.osobneFinancije.entiteti.Transakcija
+import com.diplomski.osobneFinancije.servisi.FinancijeServis
 import com.diplomski.osobneFinancije.servisi.KorisnikServis
 import com.diplomski.osobneFinancije.servisi.NotificationService
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,8 +41,8 @@ class SlusacAplikacije {
         for (transakcija in transakcije) {
             transakcija.transakcijaProvjerena = true
             if (!ObjectUtils.isEmpty(transakcija.transakcijaOd) && !ObjectUtils.isEmpty(transakcija.transakcijaPrema)) {
-                var korisnikOd = service.findByKorisnickoIme(transakcija.transakcijaOd!!)
-                var korisnikPrema = service.findByKorisnickoIme(transakcija.transakcijaPrema!!)
+                val korisnikOd = service.findByKorisnickoIme(transakcija.transakcijaOd!!)
+                val korisnikPrema = service.findByKorisnickoIme(transakcija.transakcijaPrema!!)
                 if (transakcija.naziv!!.contains("Income") && transakcija.danPlacanja!!.isBefore(LocalDateTime.now())) {
                     korisnikOd!!.stanjeRacuna += transakcija.vrijednost
                     korisnikPrema!!.stanjeRacuna -= transakcija.vrijednost
@@ -51,7 +56,7 @@ class SlusacAplikacije {
                     )
                     service.spremiKorisnika(korisnikOd)
                     service.spremiKorisnika(korisnikPrema)
-                } else if (transakcija.naziv!!.contains("Expense") && transakcija.danPlacanja!!.isBefore(LocalDateTime.now())){
+                } else if (transakcija.naziv!!.contains("Expense") && transakcija.danPlacanja!!.isBefore(LocalDateTime.now())) {
                     korisnikOd!!.stanjeRacuna -= transakcija.vrijednost
                     korisnikPrema!!.stanjeRacuna += transakcija.vrijednost
                     notificationService.createNotificationObject(
@@ -68,5 +73,23 @@ class SlusacAplikacije {
             }
             service.spremiTransakciju(transakcija)
         }
+    }
+
+    @Scheduled(cron = "0 0 0 1/1 * ?")
+    fun sendReportMail() {
+        val financijeServis = LambdaInvokerFactory.builder()
+            .lambdaClient(AWSLambdaClientBuilder.defaultClient())
+            .build(FinancijeServis::class.java)
+        val response =
+            financijeServis.lambdaIzvjestaj(ReportInput(stvoriMapuZaAwsLambud()))
+        println("Lambda rezultat = ${response.rezultatOutput}")
+    }
+
+    fun stvoriMapuZaAwsLambud(): Map<String, Transakcija> {
+        val mapaVrijednosti = HashMap<String, Transakcija>()
+        for (transakcija in service.dohvatiTransakcijeZaMjesec(LocalDateTime.now().monthValue)) {
+            mapaVrijednosti[transakcija.danPlacanja.toString()] = transakcija
+        }
+        return mapaVrijednosti
     }
 }

@@ -1,6 +1,5 @@
 package com.diplomski.osobneFinancije.entiteti
 
-import com.diplomski.osobneFinancije.forme.RacunForma
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
