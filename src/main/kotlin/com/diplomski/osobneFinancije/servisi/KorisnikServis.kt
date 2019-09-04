@@ -52,4 +52,5 @@ interface KorisnikServis : UserDetailsService {
     fun spremiTransakciju(transakcija : Transakcija)
     fun dohvatiTransakcijeZaKorisnika(username : String): List<Transakcija>
     fun azurirajTransakciju(transakcija: Transakcija)
+    fun dohvatiSveRacuneDostupneKorisniku() : List<Racun>
 }

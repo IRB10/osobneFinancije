@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableJpaRepositories("com.diplomski.osobneFinancije.repozitoriji")
 @EnableScheduling
 class ApplicationOsobneFinancije {
-    
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {

@@ -31,12 +31,15 @@ data class Korisnik(
     var aktivan : Boolean = false,
     var stanjeRacuna : Double = 0.0
 ) {
+    @JsonIgnore
     @OneToMany(mappedBy = "korisnik")
     val transakcije: MutableSet<Transakcija> = HashSet()
 
+    @JsonIgnore
     @ManyToOne
     lateinit var uloga_id: Uloga
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
         name = "korisnici_racuni",
@@ -45,6 +48,7 @@ data class Korisnik(
     )
     val racuni: MutableSet<Racun> = HashSet()
 
+    @JsonIgnore
     @OneToMany(mappedBy = "korisnik")
     val obavijesti: MutableSet<Obavijest> = HashSet()
 }

@@ -1,5 +1,6 @@
 package com.diplomski.osobneFinancije.entiteti
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 
@@ -24,7 +25,7 @@ data class Token(
         cal.add(Calendar.MINUTE, trajanjeTokena)
         return Date(cal.time.time)
     }
-
+    @JsonIgnore
     @OneToOne(targetEntity = Korisnik::class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "korisnik_id")
     var korisnik: Korisnik? = null

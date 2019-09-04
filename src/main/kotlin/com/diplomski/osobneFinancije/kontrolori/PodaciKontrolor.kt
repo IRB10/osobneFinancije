@@ -64,6 +64,12 @@ class PodaciKontrolor(private val korisnikServis: KorisnikServis, @param:Qualifi
         return overview
     }
 
+    @GetMapping(value = [csvDataImport])
+    fun showGetDataImport(model: Model): String {
+        model.addAttribute("obligationList", korisnikServis.dohvatiTransakcije())
+        return overview
+    }
+
     @GetMapping(displayEntries)
     fun displaySearch(): String {
         return "ajax"
