@@ -8,10 +8,8 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import reactor.core.publisher.Flux
 
 @RestController
 class FinancijeRestKontrolor(
@@ -40,6 +38,12 @@ class FinancijeRestKontrolor(
     @ApiResponses(value = [ApiResponse(code = 404, message = "Entries cannot be added or updated")])
     fun addNewObligation(@RequestBody entry: Transakcija) {
         userService.spremiTransakciju(entry)
+    }
+
+    @GetMapping("/api/transactions/all")
+    @ResponseBody
+    fun list(): Flux<Transakcija> {
+        return this.userService.dohvatiSveTransakcijeReaktivno()
     }
 
     companion object {

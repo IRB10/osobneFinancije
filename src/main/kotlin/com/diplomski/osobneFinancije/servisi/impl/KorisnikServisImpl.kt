@@ -27,7 +27,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.support.TransactionTemplate
 import org.springframework.util.ObjectUtils
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
+import reactor.core.scheduler.Scheduler
 import java.io.ByteArrayInputStream
 import java.time.LocalDateTime
 import java.util.*
@@ -46,8 +50,40 @@ class KorisnikServisImpl(
     private val racunRepozitorij: RacunRepozitorij,
     private val prijenosRepozitorij: PrijenosRepozitorij,
     private val notificationService: NotificationService,
-    @param:Qualifier("messageSource") private val poruke: MessageSource
+    @param:Qualifier("messageSource") private val poruke: MessageSource,
+    private val transactionTemplate: TransactionTemplate,
+    @param:Qualifier("jdbcScheduler") private val jdbcScheduler: Scheduler
 ) : KorisnikServis {
+    override fun dohvatiSveTransakcijeReaktivno(): Flux<Transakcija> {
+        val defer = Flux.defer { Flux.fromIterable(this.transakcijaRepozitorij.findAll()) }
+        return defer.subscribeOn(jdbcScheduler)
+    }
+
+    override fun dohvatiSveTransakcijeReaktivnoZaGodinu(year: Int): Flux<Transakcija> {
+        val listaTransakcija = dohvatiTransakcijeZaGodinu(year)
+        val defer = Flux.defer { Flux.fromIterable(listaTransakcija) }
+        return defer.subscribeOn(jdbcScheduler)
+    }
+
+    override fun dohvatiKorisnikaReaktivno(korisnickoIme: String): Mono<Korisnik> {
+        return Mono
+            .defer { Mono.just(this.korisnikRepozitorij.findByKorisnickoIme(korisnickoIme)!!) }
+            .subscribeOn(jdbcScheduler)
+    }
+
+    override fun dohvatiSveKorisnikeReaktivno(): Flux<Korisnik> {
+        val defer = Flux.defer { Flux.fromIterable(this.korisnikRepozitorij.findAll()) }
+        return defer.subscribeOn(jdbcScheduler)
+    }
+
+    override fun dodajKorisnikaReaktivno(korisnik: Korisnik): Mono<Korisnik?> {
+        return Mono.fromCallable {
+            transactionTemplate.execute {
+                val spremljeniKorisnik = korisnikRepozitorij.save(korisnik)
+                spremljeniKorisnik
+            }
+        }.subscribeOn(jdbcScheduler)
+    }
 
     val financijeServis = LambdaInvokerFactory.builder()
         .lambdaClient(AWSLambdaClientBuilder.defaultClient())
@@ -55,8 +91,8 @@ class KorisnikServisImpl(
 
     override fun dohvatiSveRacuneDostupneKorisniku(): List<Racun> {
         val listaRacuna = ArrayList<Racun>()
-        for (racun in racunRepozitorij.findAll()){
-            if (!racun.korisnici.contains(korisnikRepozitorij.findByKorisnickoIme(SecurityContextHolder.getContext().authentication.name))){
+        for (racun in racunRepozitorij.findAll()) {
+            if (!racun.korisnici.contains(korisnikRepozitorij.findByKorisnickoIme(SecurityContextHolder.getContext().authentication.name))) {
                 listaRacuna.add(racun)
             }
         }
