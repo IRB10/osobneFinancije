@@ -6,9 +6,10 @@ import com.diplomski.osobneFinancije.forme.ProfileForm
 import com.diplomski.osobneFinancije.forme.RacunForma
 import com.diplomski.osobneFinancije.forme.RegisterForm
 import org.springframework.security.core.userdetails.UserDetailsService
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import java.io.ByteArrayInputStream
 import java.util.*
-
 
 interface KorisnikServis : UserDetailsService {
     fun findByKorisnickoIme(korisnickoIme: String): Korisnik?
@@ -49,8 +50,14 @@ interface KorisnikServis : UserDetailsService {
     fun dohvatiOstaleKorisnike(): List<Korisnik?>
     fun dohvatiSveRacune(): List<Racun>
     fun dohvatiSveTransakcije(): List<Transakcija>
-    fun spremiTransakciju(transakcija : Transakcija)
-    fun dohvatiTransakcijeZaKorisnika(username : String): List<Transakcija>
+    fun spremiTransakciju(transakcija: Transakcija)
+    fun dohvatiTransakcijeZaKorisnika(username: String): List<Transakcija>
     fun azurirajTransakciju(transakcija: Transakcija)
-    fun dohvatiSveRacuneDostupneKorisniku() : List<Racun>
+    fun dohvatiSveRacuneDostupneKorisniku(): List<Racun>
+
+    fun dohvatiKorisnikaReaktivno(korisnickoIme: String): Mono<Korisnik>
+    fun dohvatiSveKorisnikeReaktivno(): Flux<Korisnik>
+    fun dodajKorisnikaReaktivno(korisnik: Korisnik): Mono<Korisnik?>
+    fun dohvatiSveTransakcijeReaktivnoZaGodinu(year: Int): Flux<Transakcija>
+    fun dohvatiSveTransakcijeReaktivno(): Flux<Transakcija>
 }
