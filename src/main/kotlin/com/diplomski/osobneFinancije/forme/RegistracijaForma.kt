@@ -4,7 +4,6 @@ import com.diplomski.osobneFinancije.validatori.PasswordMatches
 import com.diplomski.osobneFinancije.validatori.ValidEmail
 import com.diplomski.osobneFinancije.validatori.ValidUsername
 import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
 
 @PasswordMatches
 class RegistracijaForma {

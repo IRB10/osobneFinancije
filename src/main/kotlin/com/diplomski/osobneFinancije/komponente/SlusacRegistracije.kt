@@ -24,7 +24,7 @@ class SlusacRegistracije : ApplicationListener<ZavrsenaRegistracijaDogadaj> {
     lateinit var messages: MessageSource
 
     @Autowired
-    lateinit var  mailSender: JavaMailSender
+    lateinit var mailSender: JavaMailSender
 
     @Autowired
     lateinit var environment: Environment

@@ -8,7 +8,6 @@ import com.diplomski.osobneFinancije.forme.ProfilForma
 import com.diplomski.osobneFinancije.forme.RegistracijaForma
 import com.diplomski.osobneFinancije.iznimke.KorisnikNijePronadenIznimka
 import com.diplomski.osobneFinancije.servisi.impl.KorisnikServisImpl
-import com.diplomski.osobneFinancije.utils.StandardniOdgovor
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.badUser
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.displayProfile
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.profile
@@ -21,6 +20,7 @@ import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsnovnePutanje.Comp
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsnovnePutanje.Companion.register
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsnovnePutanje.Companion.registration
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsnovnePutanje.Companion.resetPassword
+import com.diplomski.osobneFinancije.utils.StandardniOdgovor
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.MessageSource
