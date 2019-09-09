@@ -54,19 +54,19 @@ class PodaciKontrolor(private val korisnikServis: KorisnikServis, @param:Qualifi
             model.addAttribute("errorImport", messages.getMessage("message.error.import", null, locale))
         }
 
-        model.addAttribute("obligationList", korisnikServis.dohvatiTransakcije())
+        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcije())
         return overview
     }
 
     @GetMapping(value = [csvData])
     fun showUserHomePage(model: Model): String {
-        model.addAttribute("obligationList", korisnikServis.dohvatiTransakcije())
+        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcije())
         return overview
     }
 
     @GetMapping(value = [csvDataImport])
     fun showGetDataImport(model: Model): String {
-        model.addAttribute("obligationList", korisnikServis.dohvatiTransakcije())
+        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcije())
         return overview
     }
 

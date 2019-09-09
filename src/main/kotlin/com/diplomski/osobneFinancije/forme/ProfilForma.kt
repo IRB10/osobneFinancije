@@ -6,34 +6,34 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import kotlin.streams.toList
 
-class ProfileForm {
+class ProfilForma {
 
-    var username: String? = null
-
-    @NotNull
-    @NotEmpty
-    var firstName: String? = null
+    var korisnickoIme: String? = null
 
     @NotNull
     @NotEmpty
-    var lastName: String? = null
+    var ime: String? = null
+
+    @NotNull
+    @NotEmpty
+    var prezime: String? = null
 
     @NotNull
     @NotEmpty
     var email: String? = null
 
-    var balance: Double? = null
+    var stanjeRacuna: Double? = null
 
     constructor() {
 
     }
 
     constructor(korisnik: Korisnik?) {
-        this.username = korisnik!!.korisnickoIme
-        this.firstName = korisnik.ime
-        this.lastName = korisnik.prezime
+        this.korisnickoIme = korisnik!!.korisnickoIme
+        this.ime = korisnik.ime
+        this.prezime = korisnik.prezime
         this.email = korisnik.email
-        this.balance = korisnik.stanjeRacuna + zbrojiIznosSvihRacuna(korisnik.racuni.stream().toList())
+        this.stanjeRacuna = korisnik.stanjeRacuna + zbrojiIznosSvihRacuna(korisnik.racuni.stream().toList())
     }
 
     fun zbrojiIznosSvihRacuna(racuni: List<Racun>): Double {

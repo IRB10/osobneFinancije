@@ -18,17 +18,17 @@
                         <h1 th:text="#{label.menu.edit.profile}"></h1>
                         <div class="form-group">
                             <label class="registerLabel"><b th:text="#{label.user.firstName}"></b></label>
-                            <input th:field="*{firstName}" name="firstName" class="form-control"/>
-                            <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}">
-                                <p th:each="error : ${#fields.errors('firstName')}" th:text="${error}">Validation
+                            <input th:field="*{ime}" name="firstName" class="form-control"/>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('ime')}">
+                                <p th:each="error : ${#fields.errors('ime')}" th:text="${error}">Validation
                                     error</p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="registerLabel"><b th:text="#{label.user.lastName}"></b></label>
-                            <input th:field="*{lastName}" name="lastName" class="form-control"/>
-                            <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}">
-                                <p th:each="error : ${#fields.errors('lastName')}" th:text="${error}">Validation
+                            <input th:field="*{prezime}" name="lastName" class="form-control"/>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('prezime')}">
+                                <p th:each="error : ${#fields.errors('prezime')}" th:text="${error}">Validation
                                     error</p>
                             </div>
                         </div>

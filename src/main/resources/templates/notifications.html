@@ -9,13 +9,13 @@
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
 <div class="container">
-    <div th:if="${notificationList != null}">
+    <div th:if="${listaObavijesti != null}">
         <table class="table table-striped">
             <tr>
                 <th>Message</th>
             </tr>
-            <tr th:each="notification : ${notificationList}">
-                <td th:text="${notification.poruka}"></td>
+            <tr th:each="obavijest : ${listaObavijesti}">
+                <td th:text="${obavijest.poruka}"></td>
             </tr>
         </table>
     </div>

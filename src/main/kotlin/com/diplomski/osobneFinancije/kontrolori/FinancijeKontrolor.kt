@@ -1,7 +1,7 @@
 package com.diplomski.osobneFinancije.kontrolori
 
 
-import com.diplomski.osobneFinancije.forme.FinancesForm
+import com.diplomski.osobneFinancije.forme.FinancijeForma
 import com.diplomski.osobneFinancije.repozitoriji.KategorijaRepozitorij
 import com.diplomski.osobneFinancije.servisi.KorisnikServis
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.addExpense
@@ -41,7 +41,7 @@ class FinancijeKontrolor(
 
     @GetMapping(value = [userFinances])
     fun showFinances(model: Model): String {
-        val financesForm = FinancesForm()
+        val financesForm = FinancijeForma()
         model.addAttribute(finances, financesForm)
         model.addAttribute("kategorije", kategorijaRepozitorij.findAll())
         return finances
@@ -49,53 +49,53 @@ class FinancijeKontrolor(
 
     @PostMapping(value = [addIncome])
     fun updatedUserIncome(
-        @ModelAttribute("finances") @Valid financesForm: FinancesForm, bindingResult: BindingResult,
+        @ModelAttribute("finances") @Valid financijeForma: FinancijeForma, bindingResult: BindingResult,
         request: HttpServletRequest
     ): ModelAndView {
         val locale = request.locale
         val auth = SecurityContextHolder.getContext().authentication
-        val korisnik = korisnikServis.findByKorisnickoIme(auth.name)
-        val modelAndView = ModelAndView(finances, finances, financesForm)
+        val korisnik = korisnikServis.pronadiPoKorisnickomImenu(auth.name)
+        val modelAndView = ModelAndView(finances, finances, financijeForma)
         modelAndView.addObject("kategorije", kategorijaRepozitorij.findAll())
-        if (bindingResult.hasErrors() || financesForm.income <= 0F) {
+        if (bindingResult.hasErrors() || financijeForma.prihod <= 0F) {
             modelAndView.addObject("messageError", messages.getMessage("message.income.failed", null, locale))
         } else {
             modelAndView.addObject("message", messages.getMessage("message.income.added", null, locale))
-            korisnikServis.updateIncome(korisnik!!, financesForm.income, financesForm.kategorija!!)
+            korisnikServis.azurirajPrihod(korisnik!!, financijeForma.prihod, financijeForma.kategorija!!)
         }
-        financesForm.income = 0F
+        financijeForma.prihod = 0F
         return modelAndView
     }
 
     @PostMapping(value = [addExpense])
     fun updateUserProfile(
-        @ModelAttribute("finances") @Valid financesForm: FinancesForm, bindingResult: BindingResult,
+        @ModelAttribute("finances") @Valid financijeForma: FinancijeForma, bindingResult: BindingResult,
         request: HttpServletRequest
     ): ModelAndView {
         val locale = request.locale
         val auth = SecurityContextHolder.getContext().authentication
-        val korisnik = korisnikServis.findByKorisnickoIme(auth.name)
-        val modelAndView = ModelAndView(finances, finances, financesForm)
+        val korisnik = korisnikServis.pronadiPoKorisnickomImenu(auth.name)
+        val modelAndView = ModelAndView(finances, finances, financijeForma)
         modelAndView.addObject("kategorije", kategorijaRepozitorij.findAll())
-        if (bindingResult.hasErrors() || financesForm.expense <= 0F) {
+        if (bindingResult.hasErrors() || financijeForma.troskovi <= 0F) {
             modelAndView.addObject("messageErrorExpense", messages.getMessage("message.expense.failed", null, locale))
         } else {
             modelAndView.addObject("messageExpense", messages.getMessage("message.expense.added", null, locale))
-            korisnikServis.updateExpense(korisnik!!, financesForm.expense, financesForm.kategorija!!)
+            korisnikServis.azurirajTrosak(korisnik!!, financijeForma.troskovi, financijeForma.kategorija!!)
         }
-        financesForm.expense = 0F
+        financijeForma.troskovi = 0F
         return modelAndView
     }
 
     @GetMapping(value = [homepage])
     fun showUserHomePage(model: Model): String {
-        model.addAttribute("obligationList", korisnikServis.dohvatiTransakcijeZaKorisnika())
+        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcijeZaKorisnika())
         return overview
     }
 
     @GetMapping(value = [pathObligations])
     fun showObligations(model: Model): String {
-        val financesForm = FinancesForm()
+        val financesForm = FinancijeForma()
         model.addAttribute("obligation", financesForm)
         model.addAttribute("kategorije", kategorijaRepozitorij.findAll())
         model.addAttribute("racuni", korisnikServis.dohvatiSveRacuneDostupneKorisniku())
@@ -104,38 +104,38 @@ class FinancijeKontrolor(
 
     @PostMapping(value = [addObligations])
     fun addObligation(
-        @ModelAttribute("obligation") @Valid financesForm: FinancesForm, bindingResult: BindingResult,
+        @ModelAttribute("obligation") @Valid financijeForma: FinancijeForma, bindingResult: BindingResult,
         request: HttpServletRequest
     ): ModelAndView {
         val locale = request.locale
-        val modelAndView = ModelAndView(displayObligations, displayObligations, financesForm)
+        val modelAndView = ModelAndView(displayObligations, displayObligations, financijeForma)
         modelAndView.addObject("kategorije", kategorijaRepozitorij.findAll())
         modelAndView.addObject("racuni", korisnikServis.dohvatiSveRacuneDostupneKorisniku())
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("messageError", messages.getMessage("message.obligation.value.failed", null, locale))
-        } else if (!checkFinanceForm(financesForm)) {
+        } else if (!checkFinanceForm(financijeForma)) {
             modelAndView.addObject("messageError", messages.getMessage("message.obligation.value.failed", null, locale))
         } else {
             modelAndView.addObject("messageObligation", messages.getMessage("message.obligation.added", null, locale))
             val obligationType = request.getParameter("obligationType")
-            val korisnik = financesForm.racunKorisnik
+            val korisnik = financijeForma.racunKorisnik
             var financijeKorisnik = 0L
             var financijeRacun = 0L
             if (korisnik != null) {
                 financijeRacun = korisnik.split("|")[0].toLong()
                 financijeKorisnik = korisnik.split("|")[1].toLong()
             }
-            korisnikServis.updateObligation(
-                financesForm,
+            korisnikServis.azurirajTransakciju(
+                financijeForma,
                 SecurityContextHolder.getContext().authentication.name,
                 obligationType,
-                financesForm.kategorija,
+                financijeForma.kategorija,
                 financijeKorisnik,
                 financijeRacun,
                 locale
             )
         }
-        resetFinancesForm(financesForm)
+        resetFinancesForm(financijeForma)
         return modelAndView
     }
 
@@ -148,24 +148,24 @@ class FinancijeKontrolor(
     fun citiesReport(request: HttpServletRequest): ResponseEntity<InputStreamResource> {
         val dateFrom = request.getParameter("dateFrom")
         val dateTo = request.getParameter("dateTo")
-        val byteArrayInputStream = korisnikServis.generatePdfForRange(dateFrom, dateTo)
+        val byteArrayInputStream = korisnikServis.generirajPdfZaRasponDatuma(dateFrom, dateTo)
         val headers = HttpHeaders()
         headers.add("Content-Disposition", "inline; filename=obligationReport.pdf")
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
             .body(InputStreamResource(byteArrayInputStream))
     }
 
-    private fun checkFinanceForm(financesForm: FinancesForm): Boolean {
-        return !ObjectUtils.isEmpty(financesForm) && !ObjectUtils.isEmpty(financesForm.obligationDate) && !ObjectUtils.isEmpty(
-            financesForm
-                .obligationDetails
-        ) && financesForm
-            .value != 0f
+    private fun checkFinanceForm(financijeForma: FinancijeForma): Boolean {
+        return !ObjectUtils.isEmpty(financijeForma) && !ObjectUtils.isEmpty(financijeForma.datumObveze) && !ObjectUtils.isEmpty(
+            financijeForma
+                .detaljiObveze
+        ) && financijeForma
+            .vrijednost != 0f
     }
 
-    private fun resetFinancesForm(financesForm: FinancesForm) {
-        financesForm.value = 0F
-        financesForm.obligationDate = null
-        financesForm.obligationDetails = ""
+    private fun resetFinancesForm(financijeForma: FinancijeForma) {
+        financijeForma.vrijednost = 0F
+        financijeForma.datumObveze = null
+        financijeForma.detaljiObveze = ""
     }
 }

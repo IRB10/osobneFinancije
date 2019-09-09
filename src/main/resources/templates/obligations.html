@@ -30,22 +30,22 @@
             </div>
             <div class="form-group">
                 <label class="registerLabel"><b th:text="#{label.user.value}"></b></label>
-                <input th:field="*{value}" class="form-control"/>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('value')}">
+                <input th:field="*{vrijednost}" class="form-control"/>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('vrijednost')}">
                     <p th:text="${messageError}">Validation error</p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="registerLabel"><b th:text="#{label.user.date}"></b></label>
-                <input th:field="*{obligationDate}" type="datetime-local" class="form-control"/>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('obligationDate')}">
+                <input th:field="*{datumObveze}" type="datetime-local" class="form-control"/>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('datumObveze')}">
                     <p th:text="${messageError}">Validation error</p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="registerLabel"><b th:text="#{label.obligation.details}"></b></label>
-                <textarea th:field="*{obligationDetails}" type="" class="form-control"/>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('obligationDetails')}">
+                <textarea th:field="*{detaljiObveze}" type="" class="form-control"/>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('detaljiObveze')}">
                     <p th:text="${messageError}">Validation error</p>
                 </div>
             </div>

@@ -23,8 +23,8 @@
         <form th:action="@{/user/addIncome}" th:object="${finances}" th:class="form" method="post">
             <div class="form-group">
                 <label class="registerLabel"><b th:text="#{label.user.income}"></b></label>
-                <input th:field="*{income}" class="form-control"/>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('income')}">
+                <input th:field="*{prihod}" class="form-control"/>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('prihod')}">
                     <p th:text="${messageError}">Validation error</p>
                 </div>
                 <div style="display: inline">
@@ -55,8 +55,8 @@
         <form th:action="@{/user/addExpense}" th:object="${finances}" th:class="form" method="post">
             <div class="form-group">
                 <label class="registerLabel"><b th:text="#{label.user.expense}"></b></label>
-                <input th:field="*{expense}" class="form-control"/>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('expense')}">
+                <input th:field="*{troskovi}" class="form-control"/>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('troskovi')}">
                     <p th:text="${messageErrorExpense}">Validation error</p>
                 </div>
                 <div style="display: inline">

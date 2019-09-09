@@ -4,16 +4,16 @@ import org.springframework.validation.FieldError
 import org.springframework.validation.ObjectError
 
 
-class GenericResponse {
-    private var message: String = ""
+class StandardniOdgovor {
+    private var poruka: String = ""
     private var error: String? = null
 
     constructor(message: String) : super() {
-        this.message = message
+        this.poruka = message
     }
 
     constructor(message: String, error: String) : super() {
-        this.message = message
+        this.poruka = message
         this.error = error
     }
 
@@ -27,6 +27,6 @@ class GenericResponse {
                 "{\"object\":\"" + err.objectName + "\",\"defaultMessage\":\"" + err.defaultMessage + "\"},"
             }
         }
-        this.message = "[${temp.substring(0, temp.length - 1)}]"
+        this.poruka = "[${temp.substring(0, temp.length - 1)}]"
     }
 }

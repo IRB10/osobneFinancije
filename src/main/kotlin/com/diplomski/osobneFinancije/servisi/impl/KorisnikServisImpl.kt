@@ -3,14 +3,14 @@ package com.diplomski.osobneFinancije.servisi.impl
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder
 import com.amazonaws.services.lambda.invoke.LambdaInvokerFactory
 import com.diplomski.osobneFinancije.entiteti.*
-import com.diplomski.osobneFinancije.forme.FinancesForm
-import com.diplomski.osobneFinancije.forme.ProfileForm
+import com.diplomski.osobneFinancije.forme.FinancijeForma
+import com.diplomski.osobneFinancije.forme.ProfilForma
 import com.diplomski.osobneFinancije.forme.RacunForma
-import com.diplomski.osobneFinancije.forme.RegisterForm
+import com.diplomski.osobneFinancije.forme.RegistracijaForma
 import com.diplomski.osobneFinancije.repozitoriji.*
 import com.diplomski.osobneFinancije.servisi.FinancijeServis
 import com.diplomski.osobneFinancije.servisi.KorisnikServis
-import com.diplomski.osobneFinancije.servisi.NotificationService
+import com.diplomski.osobneFinancije.servisi.ObavijestiServis
 import com.diplomski.osobneFinancije.utils.GeneratorPdfIzvjesca
 import com.diplomski.osobneFinancije.utils.Konstante.EntryDetails.Companion.entryDetailsIncome
 import com.diplomski.osobneFinancije.utils.Konstante.TimeManagament.Companion.ONE_MINUTE_IN_MILLIS
@@ -33,6 +33,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Scheduler
 import java.io.ByteArrayInputStream
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import java.util.stream.Collectors
@@ -49,11 +50,16 @@ class KorisnikServisImpl(
     private val ulogaRepozitorij: UlogaRepozitorij,
     private val racunRepozitorij: RacunRepozitorij,
     private val prijenosRepozitorij: PrijenosRepozitorij,
-    private val notificationService: NotificationService,
+    private val obavijestiServis: ObavijestiServis,
     @param:Qualifier("messageSource") private val poruke: MessageSource,
     private val transactionTemplate: TransactionTemplate,
     @param:Qualifier("jdbcScheduler") private val jdbcScheduler: Scheduler
 ) : KorisnikServis {
+    override fun dohvatiSveTransakcijeZaDan(): List<Transakcija> {
+        return transakcijaRepozitorij.findAll().stream().filter { entry -> checkEntriesForDay(entry) }
+            .collect(Collectors.toList<Transakcija>())
+    }
+
     override fun dohvatiSveTransakcijeReaktivno(): Flux<Transakcija> {
         val defer = Flux.defer { Flux.fromIterable(this.transakcijaRepozitorij.findAll()) }
         return defer.subscribeOn(jdbcScheduler)
@@ -172,8 +178,8 @@ class KorisnikServisImpl(
     }
 
     @Transactional
-    override fun updateObligation(
-        financesForm: FinancesForm,
+    override fun azurirajTransakciju(
+        financijeForma: FinancijeForma,
         korisnickoIme: String,
         obligationType: String,
         kategorija: Kategorija?,
@@ -181,11 +187,11 @@ class KorisnikServisImpl(
         racunId: Long?,
         locale: Locale
     ) {
-        val transakcija = Transakcija("Obligation - " + obligationType + " : " + financesForm.obligationDate)
+        val transakcija = Transakcija("Obligation - " + obligationType + " : " + financijeForma.datumObveze)
         transakcija.datumKreiranja = LocalDateTime.now()
-        transakcija.vrijednost = financesForm.value.toDouble()
-        transakcija.opis = financesForm.obligationDetails
-        transakcija.danPlacanja = financesForm.obligationDate
+        transakcija.vrijednost = financijeForma.vrijednost.toDouble()
+        transakcija.opis = financijeForma.detaljiObveze
+        transakcija.danPlacanja = financijeForma.datumObveze
         transakcija.transakcijaOd = korisnickoIme
         transakcija.korisnik = korisnikRepozitorij.findByKorisnickoIme(korisnickoIme)!!
         transakcija.kategorija_id = kategorija
@@ -199,21 +205,21 @@ class KorisnikServisImpl(
         }
     }
 
-    override fun generatePdfForRange(datumOd: String, datumDo: String): ByteArrayInputStream {
+    override fun generirajPdfZaRasponDatuma(datumOd: String, datumDo: String): ByteArrayInputStream {
         val entries =
             dohvatiTransakcijeZaKorisnika().stream().filter { entry -> checkEntryRange(entry, datumOd, datumDo) }
                 .collect(Collectors.toList<Transakcija>())
         return GeneratorPdfIzvjesca.entriesReport(entries)
     }
 
-    override fun updateExpense(korisnik: Korisnik, expense: Float?, kategorija: Kategorija) {
+    override fun azurirajTrosak(korisnik: Korisnik, expense: Float?, kategorija: Kategorija) {
         val response = financijeServis.lambdaOutput(LambdaInput(korisnik.stanjeRacuna, expense!!.toDouble(), "-"))
         korisnik.stanjeRacuna = response.result
         createEntry("Expense - " + korisnik.id, Math.abs(expense), korisnik.korisnickoIme, kategorija)
         korisnikRepozitorij.save(korisnik)
     }
 
-    override fun updateIncome(korisnik: Korisnik, income: Float?, kategorija: Kategorija) {
+    override fun azurirajPrihod(korisnik: Korisnik, income: Float?, kategorija: Kategorija) {
         val response = financijeServis.lambdaOutput(LambdaInput(korisnik.stanjeRacuna, income!!.toDouble(), "+"))
         korisnik.stanjeRacuna = response.result
         createEntry("Income - " + korisnik.id, Math.abs(income), korisnik.korisnickoIme, kategorija)
@@ -270,7 +276,7 @@ class KorisnikServisImpl(
         return verifikacijskiTokenRepozitorij.findByToken(verifikacijskiToken)!!
     }
 
-    override fun createPasswordResetTokenForUser(korisnik: Korisnik, token: String) {
+    override fun kreirajTokenZaObnovuLozinkeKorisniku(korisnik: Korisnik, token: String) {
         val curTimeInMs = Date().time
         val myToken = Token(token, korisnik)
         myToken.datumIsteka = Date(curTimeInMs + 5 * ONE_MINUTE_IN_MILLIS)
@@ -290,8 +296,8 @@ class KorisnikServisImpl(
         return korisnikRepozitorij.save(korisnik)
     }
 
-    override fun obrisiKorisnika(registerForm: RegisterForm) {
-        val korisnik = korisnikRepozitorij.findByKorisnickoIme(registerForm.korisnickoIme!!)
+    override fun obrisiKorisnika(registracijaForma: RegistracijaForma) {
+        val korisnik = korisnikRepozitorij.findByKorisnickoIme(registracijaForma.korisnickoIme!!)
         korisnikRepozitorij.delete(korisnik!!)
     }
 
@@ -331,16 +337,16 @@ class KorisnikServisImpl(
         korisnikRepozitorij.save(korisnik)
     }
 
-    override fun findByKorisnickoIme(korisnickoIme: String): Korisnik? {
+    override fun pronadiPoKorisnickomImenu(korisnickoIme: String): Korisnik? {
         return korisnikRepozitorij.findByKorisnickoIme(korisnickoIme)
     }
 
-    override fun findByEmail(email: String): Korisnik? {
+    override fun pronadiPoEmailu(email: String): Korisnik? {
         return korisnikRepozitorij.findByEmail(email)
     }
 
     @Transactional
-    override fun spremiRegistriranogKorisnika(registriraniKorisnik: RegisterForm): Korisnik {
+    override fun spremiRegistriranogKorisnika(registriraniKorisnik: RegistracijaForma): Korisnik {
         val korisnik = Korisnik()
         korisnik.korisnickoIme = registriraniKorisnik.korisnickoIme!!
         korisnik.ime = registriraniKorisnik.ime
@@ -352,10 +358,10 @@ class KorisnikServisImpl(
     }
 
     @Transactional
-    override fun azurirajDetaljeKorisnika(korisnik: Korisnik, profileForm: ProfileForm): Korisnik {
-        korisnik.ime = profileForm.firstName
-        korisnik.prezime = profileForm.lastName
-        korisnik.email = profileForm.email!!
+    override fun azurirajDetaljeKorisnika(korisnik: Korisnik, profilForma: ProfilForma): Korisnik {
+        korisnik.ime = profilForma.ime
+        korisnik.prezime = profilForma.prezime
+        korisnik.email = profilForma.email!!
         return korisnik
     }
 
@@ -412,6 +418,10 @@ class KorisnikServisImpl(
             .equals(username)
     }
 
+    private fun checkEntriesForDay(entry: Transakcija): Boolean {
+        return entry.danPlacanja!!.toLocalDate() == LocalDate.now()
+    }
+
     @Transactional
     fun createEntry(nazivTransakcije: String, value: Float?, korisnickoIme: String, kategorija: Kategorija) {
         val transakcija = Transakcija(nazivTransakcije)
@@ -432,11 +442,11 @@ class KorisnikServisImpl(
         if (transakcija.naziv!!.contains("Income") && transakcija.danPlacanja!!.isBefore(LocalDateTime.now())) {
             racunPrema!!.iznos -= transakcija.vrijednost
             korisnikOd!!.stanjeRacuna += transakcija.vrijednost
-            notificationService.createNotificationObject(
-                poruke.getMessage("label.pay.expense", null, locale) + korisnikOd!!.korisnickoIme,
+            obavijestiServis.stvoriObavijestObjekt(
+                poruke.getMessage("label.pay.troskovi", null, locale) + korisnikOd!!.korisnickoIme,
                 korisnikPrema!!
             )
-            notificationService.createNotificationObject(
+            obavijestiServis.stvoriObavijestObjekt(
                 poruke.getMessage("label.pay.income", null, locale) + korisnikPrema.korisnickoIme,
                 korisnikOd
             )
@@ -446,11 +456,11 @@ class KorisnikServisImpl(
         } else if (transakcija.naziv!!.contains("Expense") && transakcija.danPlacanja!!.isBefore(LocalDateTime.now())) {
             racunPrema!!.iznos += transakcija.vrijednost
             korisnikOd!!.stanjeRacuna -= transakcija.vrijednost
-            notificationService.createNotificationObject(
-                poruke.getMessage("label.pay.expense", null, locale) + korisnikPrema!!.korisnickoIme,
+            obavijestiServis.stvoriObavijestObjekt(
+                poruke.getMessage("label.pay.troskovi", null, locale) + korisnikPrema!!.korisnickoIme,
                 korisnikOd!!
             )
-            notificationService.createNotificationObject(
+            obavijestiServis.stvoriObavijestObjekt(
                 poruke.getMessage("label.pay.income", null, locale) + korisnikOd.korisnickoIme,
                 korisnikPrema
             )

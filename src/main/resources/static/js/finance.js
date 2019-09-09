@@ -19,7 +19,7 @@ function fire_ajax_submit() {
     $("#btn-search").prop("disabled", true);
     $.ajax({
             type: "GET",
-            url: "/personal-finance/api/finances",
+            url: "/api/finances",
             success: function (data) {
                 document.getElementById("added-articles").style.visibility = "visible";
                 $("tr:has(td)").remove();
@@ -29,31 +29,31 @@ function fire_ajax_submit() {
 
                     var amount = $("<td/>");
                     var span1 = $("<span/>");
-                    span1.text(entry[i].entryAmount);
+                    span1.text(entry[i].naziv);
                     amount.append(span1);
 
                     var payday = $("<td/>");
                     var span2 = $("<span/>");
-                    span2.text(entry[i].paymentDay);
+                    span2.text(entry[i].danPlacanja);
                     payday.append(span2);
 
                     var details = $("<td/>");
                     var span3 = $("<span/>");
-                    span3.text(entry[i].entryDetails);
+                    span3.text(entry[i].opis);
                     details.append(span3);
 
                     var tranFrom = $("<td/>");
                     var span4 = $("<span/>");
-                    span4.text(entry[i].transactionFrom);
+                    span4.text(entry[i].transakcijaOd);
                     tranFrom.append(span4);
 
                     var tranTo = $("<td/>");
                     var span5 = $("<span/>");
-                    span5.text(entry[i].transactionTo);
+                    span5.text(entry[i].transakcijaPrema);
                     tranTo.append(span5);
                     var newID = "row" + i;
                     $("#added-articles").append($('<tr class="clickable-row" id="row"/>')
-                        .append($('<td/>').html("<span>" + entry[i].name + "</span>"))
+                        .append($('<td/>').html("<span>" + entry[i].naziv + "</span>"))
                         .append(amount)
                         .append(payday)
                         .append(details)
@@ -80,14 +80,14 @@ function fire_ajax_submit() {
 
 function fireUpdate() {
     var formData = {
-        name: $("#obligation0").val(),
-        entryAmount: $("#obligation1").val(),
-        paymentDay: $("#obligation2").val(),
-        entryDetails: $("#obligation3").val(),
-        transactionFrom: $("#obligation4").val(),
-        transactionTo: $("#obligation5").val()
-    }
-    if (formData.name === "" || formData.entryAmount === "" || formData.entryDetails === "" || formData.paymentDay === "" || formData.transactionFrom === "") {
+        naziv: $("#obligation0").val(),
+        vrijednost: $("#obligation1").val(),
+        danPlacanja: $("#obligation2").val(),
+        opis: $("#obligation3").val(),
+        transakcijaOd: $("#obligation4").val(),
+        transakcijaPrema: $("#obligation5").val()
+    };
+    if (formData.naziv === "" || formData.vrijednost === "" || formData.opis === "" || formData.danPlacanja === "" || formData.transakcijaOd === "") {
         document.getElementById("postResultDiv").style.visibility = "visible";
         $("#postResultDiv").html("<strong>Please fill in neccesarry fields</strong>");
     }
@@ -95,7 +95,7 @@ function fireUpdate() {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/personal-finance/api/addObligation",
+            url: "/api/addObligation",
             data: JSON.stringify(formData),
             dataType: 'json',
             success: function (result) {

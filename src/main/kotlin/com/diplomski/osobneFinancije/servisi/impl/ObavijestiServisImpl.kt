@@ -3,30 +3,30 @@ package com.diplomski.osobneFinancije.servisi.impl
 import com.diplomski.osobneFinancije.entiteti.Korisnik
 import com.diplomski.osobneFinancije.entiteti.Obavijest
 import com.diplomski.osobneFinancije.repozitoriji.ObavijestRepozitorij
-import com.diplomski.osobneFinancije.servisi.NotificationService
+import com.diplomski.osobneFinancije.servisi.ObavijestiServis
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.*
 
 
 @Service
-class NotificationServiceImpl(private val obavijestRepozitorij: ObavijestRepozitorij) : NotificationService {
+class ObavijestiServisImpl(private val obavijestRepozitorij: ObavijestRepozitorij) : ObavijestiServis {
 
     companion object {
 
-        private val logger = LoggerFactory.getLogger(NotificationServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(ObavijestiServisImpl::class.java)
     }
 
-    override fun save(obavijest: Obavijest): Obavijest? {
+    override fun spremiObavijest(obavijest: Obavijest): Obavijest? {
         return try {
             obavijestRepozitorij.save(obavijest)
         } catch (e: Exception) {
-            logger.error("Exception occur while save Notification ", e)
+            logger.error("Exception occur while spremiObavijest Notification ", e)
             null
         }
     }
 
-    override fun findByUser(korisnik: Korisnik): Obavijest? {
+    override fun pronadiZaKorisnika(korisnik: Korisnik): Obavijest? {
         return try {
             obavijestRepozitorij.findByKorisnik(korisnik)
         } catch (e: Exception) {
@@ -36,7 +36,7 @@ class NotificationServiceImpl(private val obavijestRepozitorij: ObavijestRepozit
 
     }
 
-    override fun findAllByUser(korisnik: Korisnik): List<Obavijest>? {
+    override fun pronadiSveZaKorisnika(korisnik: Korisnik): List<Obavijest>? {
         return try {
             val notificationList = ArrayList<Obavijest>()
             obavijestRepozitorij.findAll().forEach { obavijest ->
@@ -51,13 +51,13 @@ class NotificationServiceImpl(private val obavijestRepozitorij: ObavijestRepozit
         }
     }
 
-    override fun createNotificationObject(poruka: String, korisnik: Korisnik): Obavijest {
+    override fun stvoriObavijestObjekt(poruka: String, korisnik: Korisnik): Obavijest {
         var obavijest = Obavijest(poruka, Date(), korisnik)
         obavijestRepozitorij.save(obavijest)
         return obavijest
     }
 
-    override fun findByUserAndId(korisnik: Korisnik, obavijestId: Int?): Obavijest? {
+    override fun pronadiPoKorisnikuIIdu(korisnik: Korisnik, obavijestId: Int?): Obavijest? {
         try {
             return obavijestRepozitorij.findByKorisnikAndId(korisnik, obavijestId)
         } catch (e: Exception) {
@@ -67,7 +67,7 @@ class NotificationServiceImpl(private val obavijestRepozitorij: ObavijestRepozit
 
     }
 
-    override fun findAllReadByUser(korisnik: Korisnik): List<Obavijest>? {
+    override fun pronadiSveProcitanePoKorisniku(korisnik: Korisnik): List<Obavijest>? {
         try {
             val notifications = ArrayList<Obavijest>()
             obavijestRepozitorij.findAll().forEach { obavijest ->
@@ -82,7 +82,7 @@ class NotificationServiceImpl(private val obavijestRepozitorij: ObavijestRepozit
         }
     }
 
-    override fun setAsRead(listaObavijesti: List<Obavijest>) {
+    override fun oznaciKaoProcitano(listaObavijesti: List<Obavijest>) {
         for (obavijest in listaObavijesti) {
             obavijest.procitano = true
             obavijestRepozitorij.save(obavijest)

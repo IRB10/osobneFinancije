@@ -9,7 +9,7 @@
 <th:block th:include="/_menu"></th:block>
 <div class="container">
     <div class="form-group">
-        <div th:if="${obligationList != null}">
+        <div th:if="${listaObveza != null}">
             <table class="table table-striped">
                 <tr>
                     <th th:text="#{label.obligation.name}"></th>
@@ -19,13 +19,13 @@
                     <th th:text="#{label.user.transaction.from}"></th>
                     <th th:text="#{label.user.transaction.to}"></th>
                 </tr>
-                <tr th:each="obligation : ${obligationList}">
-                    <td th:text="${obligation.naziv}"></td>
-                    <td th:text="${obligation.vrijednost}"></td>
-                    <td th:text="${obligation.opis}"></td>
-                    <td th:text="${obligation.danPlacanja}"></td>
-                    <td th:text="${obligation.transakcijaOd}"></td>
-                    <td th:text="${obligation.transakcijaPrema}"></td>
+                <tr th:each="obveza : ${listaObveza}">
+                    <td th:text="${obveza.naziv}"></td>
+                    <td th:text="${obveza.vrijednost}"></td>
+                    <td th:text="${obveza.opis}"></td>
+                    <td th:text="${obveza.danPlacanja}"></td>
+                    <td th:text="${obveza.transakcijaOd}"></td>
+                    <td th:text="${obveza.transakcijaPrema}"></td>
                 </tr>
             </table>
         </div>

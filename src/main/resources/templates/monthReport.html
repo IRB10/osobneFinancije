@@ -10,7 +10,7 @@
 <div class="container">
     <form class="form" th:action="@{/user/monthReport}" method="POST" enctype="utf8">
         <div class="form-group">
-            <div th:if="${obligationList != null}">
+            <div th:if="${listaObveza != null}">
                 <table class="table table-striped">
                     <tr>
                         <th th:text="#{label.obligation.name}"></th>
@@ -20,7 +20,7 @@
                         <th th:text="#{label.user.transaction.from}"></th>
                         <th th:text="#{label.user.transaction.to}"></th>
                     </tr>
-                    <tr th:each="obligation : ${obligationList}">
+                    <tr th:each="obligation : ${listaObveza}">
                         <td th:text="${obligation.naziv}"></td>
                         <td th:text="${obligation.vrijednost}"></td>
                         <td th:text="${obligation.opis}"></td>

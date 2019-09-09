@@ -1,7 +1,7 @@
 package com.diplomski.osobneFinancije.iznimke
 
 
-class UserNotFoundException : RuntimeException {
+class KorisnikNijePronadenIznimka : RuntimeException {
 
     constructor() : super() {}
 

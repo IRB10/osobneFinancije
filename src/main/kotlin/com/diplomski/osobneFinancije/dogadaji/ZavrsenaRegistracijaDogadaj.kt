@@ -5,5 +5,5 @@ import org.springframework.context.ApplicationEvent
 import java.util.*
 
 
-class OnRegistrationCompleteEvent(var korisnik: Korisnik, var locale: Locale, var appUrl: String) :
+class ZavrsenaRegistracijaDogadaj(var korisnik: Korisnik, var locale: Locale, var appUrl: String) :
     ApplicationEvent(korisnik)

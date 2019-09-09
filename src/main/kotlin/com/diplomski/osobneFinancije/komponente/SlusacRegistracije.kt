@@ -1,6 +1,6 @@
 package com.diplomski.osobneFinancije.komponente
 
-import com.diplomski.osobneFinancije.dogadaji.OnRegistrationCompleteEvent
+import com.diplomski.osobneFinancije.dogadaji.ZavrsenaRegistracijaDogadaj
 import com.diplomski.osobneFinancije.entiteti.Korisnik
 import com.diplomski.osobneFinancije.servisi.KorisnikServis
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,9 +15,9 @@ import java.util.*
 
 
 @Component
-class SlusacRegistracije : ApplicationListener<OnRegistrationCompleteEvent> {
+class SlusacRegistracije : ApplicationListener<ZavrsenaRegistracijaDogadaj> {
     @Autowired
-    lateinit var service: KorisnikServis
+    lateinit var korisnikServis: KorisnikServis
 
     @Autowired
     @Qualifier("messageSource")
@@ -27,23 +27,23 @@ class SlusacRegistracije : ApplicationListener<OnRegistrationCompleteEvent> {
     lateinit var  mailSender: JavaMailSender
 
     @Autowired
-    lateinit var env: Environment
+    lateinit var environment: Environment
 
-    override fun onApplicationEvent(event: OnRegistrationCompleteEvent) {
+    override fun onApplicationEvent(event: ZavrsenaRegistracijaDogadaj) {
         this.confirmRegistration(event)
     }
 
-    private fun confirmRegistration(event: OnRegistrationCompleteEvent) {
+    private fun confirmRegistration(event: ZavrsenaRegistracijaDogadaj) {
         val user = event.korisnik
         val token = UUID.randomUUID().toString()
-        service.stvoriVerifikacisjkiTokenZaKorisnika(user, token)
+        korisnikServis.stvoriVerifikacisjkiTokenZaKorisnika(user, token)
 
         val email = constructEmailMessage(event, user, token)
         mailSender.send(email)
     }
 
     private fun constructEmailMessage(
-        event: OnRegistrationCompleteEvent,
+        event: ZavrsenaRegistracijaDogadaj,
         korisnik: Korisnik,
         token: String
     ): SimpleMailMessage {
@@ -55,7 +55,7 @@ class SlusacRegistracije : ApplicationListener<OnRegistrationCompleteEvent> {
         email.setTo(recipientAddress)
         email.setSubject(subject)
         email.setText("$message \r\n$confirmationUrl")
-        email.setFrom(env.getProperty("spring.mail.username")!!)
+        email.setFrom(environment.getProperty("spring.mail.username")!!)
         return email
     }
 

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class AppAuthenticationEntryPoint : BasicAuthenticationEntryPoint() {
+class UlaznaTockaAutentikacijeAplikacije : BasicAuthenticationEntryPoint() {
     @Throws(IOException::class, ServletException::class)
     override fun commence(
         request: HttpServletRequest?,
@@ -22,6 +22,6 @@ class AppAuthenticationEntryPoint : BasicAuthenticationEntryPoint() {
 
     @Throws(Exception::class)
     override fun afterPropertiesSet() {
-        realmName = "PERSONAL FINANCE"
+        realmName = "Osobne Financije"
     }
 }

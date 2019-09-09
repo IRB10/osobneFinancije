@@ -19,14 +19,14 @@ class IzvjescaKontrolor(private val korisnikServis: KorisnikServis) {
 
     @GetMapping(value = [monthReport])
     fun displayCurrentMonthReport(model: Model): String {
-        model.addAttribute("obligationList", korisnikServis.dohvatiTransakcijeZaMjesec(LocalDateTime.now().monthValue))
+        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcijeZaMjesec(LocalDateTime.now().monthValue))
         return displayMonthReport
     }
 
     @PostMapping(value = [monthReport])
     fun showFinances(model: Model, request: HttpServletRequest): String {
         model.addAttribute(
-            "obligationList",
+            "listaObveza",
             korisnikServis.dohvatiTransakcijeZaMjesec(Integer.parseInt(request.getParameter("month")))
         )
         return displayMonthReport
@@ -35,7 +35,7 @@ class IzvjescaKontrolor(private val korisnikServis: KorisnikServis) {
     @GetMapping(value = [yearReport])
     fun displayCurrentYearReport(model: Model): String {
         model.addAttribute(
-            "obligationList",
+            "listaObveza",
             korisnikServis.dohvatiSveTransakcijeReaktivnoZaGodinu(LocalDateTime.now().year).toStream().toList()
         )
         return displayYearReport

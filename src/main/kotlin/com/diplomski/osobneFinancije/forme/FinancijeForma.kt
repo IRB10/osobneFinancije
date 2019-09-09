@@ -6,17 +6,17 @@ import com.diplomski.osobneFinancije.entiteti.Racun
 import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 
-class FinancesForm {
-    var income: Float = 0F
+class FinancijeForma {
+    var prihod: Float = 0F
 
-    var expense: Float = 0F
+    var troskovi: Float = 0F
 
-    var value: Float = 0F
+    var vrijednost: Float = 0F
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    var obligationDate: LocalDateTime? = null
+    var datumObveze: LocalDateTime? = null
 
-    var obligationDetails: String? = ""
+    var detaljiObveze: String? = ""
 
     var kategorija: Kategorija? = Kategorija()
 

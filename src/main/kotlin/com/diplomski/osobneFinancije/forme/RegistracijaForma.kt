@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 @PasswordMatches
-class RegisterForm {
+class RegistracijaForma {
     @ValidUsername
     @NotEmpty
     var korisnickoIme: String? = null

@@ -1,16 +1,15 @@
 package com.diplomski.osobneFinancije.kontrolori
 
-import com.diplomski.osobneFinancije.dogadaji.OnRegistrationCompleteEvent
+import com.diplomski.osobneFinancije.dogadaji.ZavrsenaRegistracijaDogadaj
 import com.diplomski.osobneFinancije.entiteti.Korisnik
 import com.diplomski.osobneFinancije.entiteti.Racun
-import com.diplomski.osobneFinancije.forme.PasswordDto
-import com.diplomski.osobneFinancije.forme.ProfileForm
-import com.diplomski.osobneFinancije.forme.RegisterForm
-import com.diplomski.osobneFinancije.iznimke.UserNotFoundException
+import com.diplomski.osobneFinancije.forme.LozinkaDto
+import com.diplomski.osobneFinancije.forme.ProfilForma
+import com.diplomski.osobneFinancije.forme.RegistracijaForma
+import com.diplomski.osobneFinancije.iznimke.KorisnikNijePronadenIznimka
 import com.diplomski.osobneFinancije.servisi.impl.KorisnikServisImpl
-import com.diplomski.osobneFinancije.utils.GenericResponse
+import com.diplomski.osobneFinancije.utils.StandardniOdgovor
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.badUser
-import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.basePath
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.displayProfile
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.profile
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.profileDetails
@@ -55,44 +54,44 @@ class RegistracijaKotrolor(
 
     @RequestMapping(value = [registration], method = [RequestMethod.GET])
     fun showRegistrationForm(model: Model): String {
-        val registerForm = RegisterForm()
+        val registerForm = RegistracijaForma()
         model.addAttribute("user", registerForm)
         return register
     }
 
     @RequestMapping(value = [profileDetails], method = [RequestMethod.GET])
     fun showUserDetails(model: Model): String {
-        val korisnik = korisnikServis.findByKorisnickoIme(SecurityContextHolder.getContext().authentication.name)
-        val profileForm = ProfileForm(korisnik!!)
+        val korisnik = korisnikServis.pronadiPoKorisnickomImenu(SecurityContextHolder.getContext().authentication.name)
+        val profileForm = ProfilForma(korisnik!!)
         model.addAttribute("user", profileForm)
         return displayProfile
     }
 
     @RequestMapping(value = [userProfile], method = [RequestMethod.GET])
     fun showProfile(model: Model): String {
-        val korisnik = korisnikServis.findByKorisnickoIme(SecurityContextHolder.getContext().authentication.name)
-        val profileForm = ProfileForm(korisnik!!)
+        val korisnik = korisnikServis.pronadiPoKorisnickomImenu(SecurityContextHolder.getContext().authentication.name)
+        val profileForm = ProfilForma(korisnik!!)
         model.addAttribute("user", profileForm)
         return profile
     }
 
     @RequestMapping(value = [userProfile], method = [RequestMethod.POST])
-    fun updateUserProfile(@ModelAttribute("user") @Valid profileForm: ProfileForm, bindingResult: BindingResult): ModelAndView {
-        val korisnik = korisnikServis.findByKorisnickoIme(SecurityContextHolder.getContext().authentication.name)
-        profileForm.username = (SecurityContextHolder.getContext().authentication.name)
-        profileForm.balance = zbrojiIznosSvihRacuna(korisnik!!.racuni.toList())
+    fun updateUserProfile(@ModelAttribute("user") @Valid profilForma: ProfilForma, bindingResult: BindingResult): ModelAndView {
+        val korisnik = korisnikServis.pronadiPoKorisnickomImenu(SecurityContextHolder.getContext().authentication.name)
+        profilForma.korisnickoIme = (SecurityContextHolder.getContext().authentication.name)
+        profilForma.stanjeRacuna = korisnik!!.stanjeRacuna + zbrojiIznosSvihRacuna(korisnik.racuni.toList())
         if (bindingResultHasErrors(bindingResult)) {
-            return ModelAndView(displayProfile, "user", profileForm)
+            return ModelAndView(displayProfile, "user", profilForma)
         } else {
-            val user1 = updateUserAccount(korisnik, profileForm)
+            val user1 = updateUserAccount(korisnik, profilForma)
             korisnikServis.azurirajKorisnika(user1)
-            return ModelAndView(displayProfile, "user", profileForm)
+            return ModelAndView(displayProfile, "user", profilForma)
         }
     }
 
     @RequestMapping(value = [registration], method = [RequestMethod.POST])
     fun registerUserAccount(
-        @ModelAttribute("user") @Valid userDto: RegisterForm, result: BindingResult,
+        @ModelAttribute("user") @Valid userDto: RegistracijaForma, result: BindingResult,
         request: HttpServletRequest
     ): ModelAndView {
         if (bindingResultHasErrors(result)) {
@@ -101,7 +100,7 @@ class RegistracijaKotrolor(
             val registered = createUserAccount(userDto)
             try {
                 val appUrl = request.requestURL.toString()
-                eventPublisher.publishEvent(OnRegistrationCompleteEvent(registered, request.locale, appUrl))
+                eventPublisher.publishEvent(ZavrsenaRegistracijaDogadaj(registered, request.locale, appUrl))
             } catch (me: Exception) {
                 korisnikServis.obrisiKorisnika(userDto)
                 return ModelAndView("error", "user", userDto)
@@ -111,39 +110,39 @@ class RegistracijaKotrolor(
         }
     }
 
-    private fun createUserAccount(accountDto: RegisterForm): Korisnik {
+    private fun createUserAccount(accountDto: RegistracijaForma): Korisnik {
         return korisnikServis.spremiRegistriranogKorisnika(accountDto)
     }
 
-    private fun updateUserAccount(user: Korisnik, profileForm: ProfileForm): Korisnik {
-        return korisnikServis.azurirajDetaljeKorisnika(user, profileForm)
+    private fun updateUserAccount(user: Korisnik, profilForma: ProfilForma): Korisnik {
+        return korisnikServis.azurirajDetaljeKorisnika(user, profilForma)
     }
 
     @RequestMapping(value = [resetPassword], method = [RequestMethod.POST])
-    fun resetPassword(request: HttpServletRequest, @RequestParam("email") userEmail: String): GenericResponse {
-        val korisnik = korisnikServis.findByEmail(userEmail)
+    fun resetPassword(request: HttpServletRequest, @RequestParam("email") userEmail: String): StandardniOdgovor {
+        val korisnik = korisnikServis.pronadiPoEmailu(userEmail)
         val appUrl = "http://" + request.serverName + ":" + request.serverPort + request.contextPath
         if (ObjectUtils.isEmpty(korisnik)) {
-            throw UserNotFoundException()
+            throw KorisnikNijePronadenIznimka()
         }
         val token = UUID.randomUUID().toString()
-        korisnikServis.createPasswordResetTokenForUser(korisnik!!, token)
+        korisnikServis.kreirajTokenZaObnovuLozinkeKorisniku(korisnik!!, token)
         mailSender.send(constructResetTokenEmail(appUrl, request.locale, token, korisnik))
-        return GenericResponse(poruke.getMessage("message.resetPasswordEmail", null, request.locale))
+        return StandardniOdgovor(poruke.getMessage("message.resetPasswordEmail", null, request.locale))
     }
 
     @RequestMapping(value = [updatePassword], method = [RequestMethod.GET])
     fun showChangePasswordPage(
-        passwordDto: PasswordDto,
+        lozinkaDto: LozinkaDto,
         locale: Locale, @RequestParam("id") id: Long, @RequestParam("token") token: String
     ): ModelAndView {
         val result = korisnikServis.validirajTokenZaLozinku(id, token)
         if ("valid" != result) {
-            val modelAndView = ModelAndView(updatePassword, "user", passwordDto)
+            val modelAndView = ModelAndView(updatePassword, "user", lozinkaDto)
             modelAndView.addObject("message", poruke.getMessage("auth.message.$result", null, locale))
             return modelAndView
         }
-        return ModelAndView(updatePassword, "user", passwordDto)
+        return ModelAndView(updatePassword, "user", lozinkaDto)
     }
 
     @RequestMapping(value = [registerConfirm], method = [RequestMethod.GET])
@@ -163,17 +162,17 @@ class RegistracijaKotrolor(
     }
 
     @RequestMapping(value = [savePassword], method = [RequestMethod.POST])
-    fun savePassword(@ModelAttribute("user") @Valid passwordDto: PasswordDto, result: BindingResult): ModelAndView {
+    fun savePassword(@ModelAttribute("user") @Valid lozinkaDto: LozinkaDto, result: BindingResult): ModelAndView {
         if (result.hasErrors()) {
             result.globalErrors.forEach { f ->
                 if ("PasswordMatches".contains(Objects.requireNonNull(f.code)!!)) {
                     result.rejectValue("lozinka", "message.passError")
                 }
             }
-            return ModelAndView(updatePassword, "user", passwordDto)
+            return ModelAndView(updatePassword, "user", lozinkaDto)
         } else {
             val korisnik = SecurityContextHolder.getContext().authentication.principal as Korisnik
-            korisnikServis.promijeniLozinkuKorisniku(korisnik, passwordDto.lozinka!!)
+            korisnikServis.promijeniLozinkuKorisniku(korisnik, lozinkaDto.lozinka!!)
             SecurityContextHolder.clearContext()
             return ModelAndView(loginPage)
         }

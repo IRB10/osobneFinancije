@@ -1,7 +1,7 @@
 package com.diplomski.osobneFinancije.validatori
 
-import com.diplomski.osobneFinancije.forme.PasswordDto
-import com.diplomski.osobneFinancije.forme.RegisterForm
+import com.diplomski.osobneFinancije.forme.LozinkaDto
+import com.diplomski.osobneFinancije.forme.RegistracijaForma
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
@@ -12,10 +12,10 @@ class PasswordMatchesValidator : ConstraintValidator<PasswordMatches, Any> {
     }
 
     override fun isValid(obj: Any, context: ConstraintValidatorContext): Boolean {
-        return if (obj is RegisterForm) {
+        return if (obj is RegistracijaForma) {
             obj.lozinka == obj.getPonovljenaLozinka()
         } else {
-            val user = obj as PasswordDto
+            val user = obj as LozinkaDto
             user.lozinka == user.getPonovljenaLozinka()
         }
     }

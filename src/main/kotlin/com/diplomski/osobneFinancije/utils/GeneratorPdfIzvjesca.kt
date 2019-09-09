@@ -25,7 +25,7 @@ class GeneratorPdfIzvjesca {
                 val headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD)
 
                 var hcell: PdfPCell
-                hcell = PdfPCell(Phrase("Obligation name", headFont))
+                hcell = PdfPCell(Phrase("Obligation naziv", headFont))
                 hcell.horizontalAlignment = Element.ALIGN_CENTER
                 table.addCell(hcell)
 

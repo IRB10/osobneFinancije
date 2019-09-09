@@ -45,30 +45,30 @@ class ExcelView : AbstractView() {
         font.color = HSSFColor.HSSFColorPredefined.WHITE.index
         style.setFont(font)
 
-        val header = sheet.createRow(0)
-        header.createCell(0).setCellValue("Obligation name")
-        header.getCell(0).cellStyle = style
-        header.createCell(1).setCellValue("Amount")
-        header.getCell(1).cellStyle = style
-        header.createCell(2).setCellValue("Obligation details")
-        header.getCell(2).cellStyle = style
-        header.createCell(3).setCellValue("Obligation date")
-        header.getCell(3).cellStyle = style
-        header.createCell(4).setCellValue("Transaction from")
-        header.getCell(4).cellStyle = style
-        header.createCell(5).setCellValue("Transaction to")
-        header.getCell(5).cellStyle = style
+        val zaglavlje = sheet.createRow(0)
+        zaglavlje.createCell(0).setCellValue("Obligation naziv")
+        zaglavlje.getCell(0).cellStyle = style
+        zaglavlje.createCell(1).setCellValue("Amount")
+        zaglavlje.getCell(1).cellStyle = style
+        zaglavlje.createCell(2).setCellValue("Obligation details")
+        zaglavlje.getCell(2).cellStyle = style
+        zaglavlje.createCell(3).setCellValue("Obligation date")
+        zaglavlje.getCell(3).cellStyle = style
+        zaglavlje.createCell(4).setCellValue("Transaction from")
+        zaglavlje.getCell(4).cellStyle = style
+        zaglavlje.createCell(5).setCellValue("Transaction to")
+        zaglavlje.getCell(5).cellStyle = style
 
         var rowCount = 1
 
         for (entry in entries) {
-            val userRow = sheet.createRow(rowCount++)
-            userRow.createCell(0).setCellValue(entry.naziv)
-            userRow.createCell(1).setCellValue(entry.vrijednost)
-            userRow.createCell(2).setCellValue(entry.opis)
-            userRow.createCell(3).setCellValue(entry.danPlacanja.toString())
-            userRow.createCell(4).setCellValue(entry.transakcijaOd)
-            userRow.createCell(5).setCellValue(entry.transakcijaPrema)
+            val transakcijaRedak = sheet.createRow(rowCount++)
+            transakcijaRedak.createCell(0).setCellValue(entry.naziv)
+            transakcijaRedak.createCell(1).setCellValue(entry.vrijednost)
+            transakcijaRedak.createCell(2).setCellValue(entry.opis)
+            transakcijaRedak.createCell(3).setCellValue(entry.danPlacanja.toString())
+            transakcijaRedak.createCell(4).setCellValue(entry.transakcijaOd)
+            transakcijaRedak.createCell(5).setCellValue(entry.transakcijaPrema)
         }
         httpServletResponse.contentType = this.contentType
         this.renderWorkbook(workbook, httpServletResponse)

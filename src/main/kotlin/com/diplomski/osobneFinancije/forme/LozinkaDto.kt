@@ -4,7 +4,7 @@ import com.diplomski.osobneFinancije.validatori.PasswordMatches
 import com.diplomski.osobneFinancije.validatori.ValidPassword
 
 @PasswordMatches
-class PasswordDto {
+class LozinkaDto {
 
     var staraLozinka: String? = null
 

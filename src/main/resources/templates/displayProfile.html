@@ -18,15 +18,15 @@
                         <h1 th:text="#{label.profile.view}"></h1>
                         <div class="form-group">
                             <label class="registerLabel"><b th:text="#{label.user.userName}"></b></label>
-                            <label class="form-control"><b th:text="*{username}"></b></label>
+                            <label class="form-control"><b th:text="*{korisnickoIme}"></b></label>
                         </div>
                         <div class="form-group">
                             <label class="registerLabel"><b th:text="#{label.user.firstName}"></b></label>
-                            <label class="form-control"><b th:text="*{firstName}"></b></label>
+                            <label class="form-control"><b th:text="*{ime}"></b></label>
                         </div>
                         <div class="form-group">
                             <label class="registerLabel"><b th:text="#{label.user.lastName}"></b></label>
-                            <label class="form-control"><b th:text="*{lastName}"></b></label>
+                            <label class="form-control"><b th:text="*{prezime}"></b></label>
                         </div>
                         <div class="form-group">
                             <label class="registerLabel"><b th:text="#{label.user.email}"></b></label>
@@ -34,7 +34,7 @@
                         </div>
                         <div class="form-group">
                             <label class="registerLabel"><b th:text="#{label.user.balance}"></b></label>
-                            <label class="form-control"><b th:text="*{balance}"></b></label>
+                            <label class="form-control"><b th:text="*{stanjeRacuna}"></b></label>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-info btn-md loginSignIn" th:text="#{label.menu.edit.profile}">

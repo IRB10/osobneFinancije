@@ -33,9 +33,7 @@ class EmailValidator : ConstraintValidator<ValidEmail, String> {
 
     private fun emailExist(email: String): Boolean {
         val user = korisnikRepozitorij!!.findByEmail(email)
-        return if (user != null) {
-            true
-        } else false
+        return user != null
     }
 
     companion object {
