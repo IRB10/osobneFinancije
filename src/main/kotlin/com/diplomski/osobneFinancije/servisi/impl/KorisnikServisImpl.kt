@@ -419,7 +419,7 @@ class KorisnikServisImpl(
     }
 
     private fun checkEntriesForDay(entry: Transakcija): Boolean {
-        return entry.danPlacanja!!.toLocalDate() == LocalDate.now()
+        return entry.danPlacanja!!.toLocalDate() == LocalDate.now().minusDays(1)
     }
 
     @Transactional

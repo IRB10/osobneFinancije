@@ -82,11 +82,11 @@ class SlusacAplikacije {
             .lambdaClient(AWSLambdaClientBuilder.defaultClient())
             .build(FinancijeServis::class.java)
         val response =
-            financijeServis.lambdaIzvjestaj(ReportInput(stvoriMapuZaAwsLambud()))
+            financijeServis.lambdaIzvjestaj(ReportInput(stvoriMapuZaAwsLambdu()))
         println("Lambda rezultat = ${response.rezultatOutput}")
     }
 
-    fun stvoriMapuZaAwsLambud(): Map<String, Transakcija> {
+    fun stvoriMapuZaAwsLambdu(): Map<String, Transakcija> {
         val mapaVrijednosti = HashMap<String, Transakcija>()
         for (transakcija in korisnikServis.dohvatiSveTransakcijeZaDan()) {
             mapaVrijednosti[transakcija.danPlacanja.toString()] = transakcija
