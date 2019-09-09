@@ -27,7 +27,7 @@ data class Korisnik(
     @get:JsonIgnore
     @set:JsonProperty
     var lozinka: String? = null,
-    val datum_prijave: Timestamp? = null,
+    var datum_prijave: Timestamp? = null,
     var aktivan: Boolean = false,
     var stanjeRacuna: Double = 0.0
 ) {

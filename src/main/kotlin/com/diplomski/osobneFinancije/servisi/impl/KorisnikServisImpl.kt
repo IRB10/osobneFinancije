@@ -91,7 +91,7 @@ class KorisnikServisImpl(
         }.subscribeOn(jdbcScheduler)
     }
 
-    val financijeServis = LambdaInvokerFactory.builder()
+    val financijeServis: FinancijeServis = LambdaInvokerFactory.builder()
         .lambdaClient(AWSLambdaClientBuilder.defaultClient())
         .build(FinancijeServis::class.java)
 

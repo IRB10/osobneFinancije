@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.servlet.ModelAndView
+import java.sql.Timestamp
+import java.time.LocalDateTime
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
@@ -89,6 +91,9 @@ class FinancijeKontrolor(
 
     @GetMapping(value = [homepage])
     fun showUserHomePage(model: Model): String {
+        val korisnik = korisnikServis.pronadiPoKorisnickomImenu(SecurityContextHolder.getContext().authentication.name)
+        korisnik!!.datum_prijave = Timestamp.valueOf(LocalDateTime.now())
+        korisnikServis.spremiKorisnika(korisnik)
         model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcijeZaKorisnika())
         return overview
     }
