@@ -9,7 +9,7 @@
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
 
-<div class="container">
+<div class="container main">
     <div id="login-row" class="row justify-content-center align-items-center">
         <div id="login-column" class="col-md-6">
             <div class="wrap">
@@ -20,7 +20,8 @@
                             <label class="registerLabel"><b th:text="#{label.user.userName}"></b></label>
                             <input th:field="*{korisnickoIme}" name="korisnickoIme" class="form-control"/>
                             <div class="alert alert-danger" th:if="${#fields.hasErrors('korisnickoIme')}">
-                                <p th:each="error : ${#fields.errors('korisnickoIme')}" th:text="${error}">Validation error</p>
+                                <p th:each="error : ${#fields.errors('korisnickoIme')}" th:text="${error}">Validation
+                                    error</p>
                             </div>
                         </div>
                         <div class="form-group">
@@ -34,12 +35,13 @@
                             <label class="registerLabel"><b th:text="#{label.user.lastName}"></b></label>
                             <input th:field="*{prezime}" name="prezime" class="form-control"/>
                             <div class="alert alert-danger" th:if="${#fields.hasErrors('prezime')}">
-                                <p th:each="error : ${#fields.errors('prezime')}" th:text="${error}">Validation error</p>
+                                <p th:each="error : ${#fields.errors('prezime')}" th:text="${error}">Validation
+                                    error</p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="registerLabel"><b th:text="#{label.user.email}"></b></label>
-                            <input type="email" th:field="*{email}" name="email" class="form-control"/>
+                            <input type="email" id="inputEmail" th:field="*{email}" name="email" class="form-control"/>
                             <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
                                 <p th:each="error : ${#fields.errors('email')}" th:text="${error}">Validation error</p>
                             </div>
@@ -49,18 +51,22 @@
                             <label class="registerLabel"><b th:text="#{label.user.password}"></b></label>
                             <input type="password" th:field="*{lozinka}" name="password" class="form-control"/>
                             <div class="alert alert-danger" th:if="${#fields.hasErrors('lozinka')}">
-                                <p th:each="error : ${#fields.errors('lozinka')}" th:text="${error}">Validation error</p>
+                                <p th:each="error : ${#fields.errors('lozinka')}" th:text="${error}">Validation
+                                    error</p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="registerLabel"><b th:text="#{label.user.confirmPass}"></b></label>
-                            <input type="password" th:field="*{ponovljenaLozinka}" name="rPassword" class="form-control"/>
+                            <input type="password" th:field="*{ponovljenaLozinka}" name="rPassword"
+                                   class="form-control"/>
                             <div class="alert alert-danger" th:if="${#fields.hasErrors('ponovljenaLozinka')}">
-                                <p th:each="error : ${#fields.errors('ponovljenaLozinka')}" th:text="${error}">Validation error</p>
+                                <p th:each="error : ${#fields.errors('ponovljenaLozinka')}" th:text="${error}">
+                                    Validation error</p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-info btn-md loginSignIn" th:text="#{label.form.register.submit}">
+                            <button type="submit" class="btn btn-info btn-md loginSignIn"
+                                    th:text="#{label.form.register.submit}">
                                 submit
                             </button>
                         </div>

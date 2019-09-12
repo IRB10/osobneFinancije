@@ -1,10 +1,7 @@
 package com.diplomski.osobneFinancije.servisi
 
 import com.diplomski.osobneFinancije.entiteti.*
-import com.diplomski.osobneFinancije.forme.FinancijeForma
-import com.diplomski.osobneFinancije.forme.ProfilForma
-import com.diplomski.osobneFinancije.forme.RacunForma
-import com.diplomski.osobneFinancije.forme.RegistracijaForma
+import com.diplomski.osobneFinancije.forme.*
 import org.springframework.security.core.userdetails.UserDetailsService
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -51,14 +48,18 @@ interface KorisnikServis : UserDetailsService {
     fun dohvatiSveRacune(): List<Racun>
     fun dohvatiSveTransakcije(): List<Transakcija>
     fun spremiTransakciju(transakcija: Transakcija)
+    fun spremiTransakcijuAJAX(transakcija: FinancijeForma)
     fun dohvatiTransakcijeZaKorisnika(username: String): List<Transakcija>
     fun azurirajTransakciju(transakcija: Transakcija)
     fun dohvatiSveRacuneDostupneKorisniku(): List<Racun>
     fun dohvatiSveTransakcijeZaDan(): List<Transakcija>
+    fun dohvatiSveKorisnike(): List<Korisnik>
 
     fun dohvatiKorisnikaReaktivno(korisnickoIme: String): Mono<Korisnik>
     fun dohvatiSveKorisnikeReaktivno(): Flux<Korisnik>
     fun dodajKorisnikaReaktivno(korisnik: Korisnik): Mono<Korisnik?>
     fun dohvatiSveTransakcijeReaktivnoZaGodinu(year: Int): Flux<Transakcija>
     fun dohvatiSveTransakcijeReaktivno(): Flux<Transakcija>
+    fun staraLozinkuKorisnikaValidna(korisnickoIme: String, staraLozinka: String?): Boolean
+    fun dodajKategoriju(kategorijaForma: KategorijaForma)
 }

@@ -2,11 +2,13 @@ package com.diplomski.osobneFinancije.kontrolori
 
 
 import com.diplomski.osobneFinancije.forme.FinancijeForma
+import com.diplomski.osobneFinancije.forme.KategorijaForma
 import com.diplomski.osobneFinancije.repozitoriji.KategorijaRepozitorij
 import com.diplomski.osobneFinancije.servisi.KorisnikServis
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.addExpense
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.addIncome
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.addObligations
+import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.categories
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.displayObligations
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.displayPdfReport
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.finances
@@ -14,6 +16,7 @@ import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Co
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.overview
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.pathObligations
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.pdfReport
+import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.userCategories
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.userFinances
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.MessageSource
@@ -47,6 +50,27 @@ class FinancijeKontrolor(
         model.addAttribute(finances, financesForm)
         model.addAttribute("kategorije", kategorijaRepozitorij.findAll())
         return finances
+    }
+
+    @GetMapping(value = [userCategories])
+    fun showCategories(model: Model): ModelAndView {
+        return ModelAndView(categories, "kategorija", KategorijaForma())
+    }
+
+    @PostMapping(value = [userCategories])
+    fun addCategories(
+        @ModelAttribute("kategorija") @Valid kategorijaForma: KategorijaForma, bindingResult: BindingResult,
+        request: HttpServletRequest
+    ): ModelAndView {
+        val locale = request.locale
+        val modelAndView = ModelAndView(categories, "kategorija", kategorijaForma)
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("messageError", messages.getMessage("message.category.failed", null, locale))
+        } else {
+            modelAndView.addObject("message", messages.getMessage("message.category.succeded", null, locale))
+            korisnikServis.dodajKategoriju(kategorijaForma)
+        }
+        return modelAndView
     }
 
     @PostMapping(value = [addIncome])

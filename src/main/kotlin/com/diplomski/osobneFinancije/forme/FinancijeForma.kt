@@ -16,7 +16,15 @@ class FinancijeForma {
 
     var detaljiObveze: String? = ""
 
+    var naziv : String =""
+
     var kategorija: Kategorija? = Kategorija()
 
     var racunKorisnik: String? = ""
+
+    var kategorija_id : String? = ""
+
+    var danPlacanja : String = ""
+
+    var transakcijaPrema : String = ""
 }

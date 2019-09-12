@@ -7,70 +7,72 @@
 </head>
 <body>
 <th:block th:include="/_menu"></th:block>
-<div class="container bg-dark">
-    <h1 th:text="#{messages.add.obligations}" class="registerLabel">reset</h1><br/>
-    <div class="container clear-top">
-        <div class="alert-info" th:if="${messageObligation != null}">
-            <p th:text="${messageObligation}">Validation error</p>
+<div class="container main">
+    <div class="container bg-dark">
+        <h1 th:text="#{messages.add.obligations}" class="registerLabel">reset</h1><br/>
+        <div class="container clear-top">
+            <div class="alert-info" th:if="${messageObligation != null}">
+                <p th:text="${messageObligation}">Validation error</p>
+            </div>
         </div>
-    </div>
-    <div class="container clear-top">
-        <div class="alert alert-danger" th:if="${messageError != null}">
-            <p th:text="${messageError}">Validation error</p>
+        <div class="container clear-top">
+            <div class="alert alert-danger" th:if="${messageError != null}">
+                <p th:text="${messageError}">Validation error</p>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <form th:action="@{/user/addObligation}" th:object="${obligation}" th:class="form" method="post">
-            <div class="form-group">
-                <label class="registerLabel"><b th:text="#{label.user.obligation.type}"></b></label>
-                <select class="form-control" id="obligationType" name="obligationType">
-                    <option value="Income">Income</option>
-                    <option value="Expense">Expense</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="registerLabel"><b th:text="#{label.user.value}"></b></label>
-                <input th:field="*{vrijednost}" class="form-control"/>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('vrijednost')}">
-                    <p th:text="${messageError}">Validation error</p>
+        <div class="row">
+            <form th:action="@{/user/addObligation}" th:object="${obligation}" th:class="form" method="post">
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.user.obligation.type}"></b></label>
+                    <select class="form-control" id="obligationType" name="obligationType">
+                        <option value="Income">Income</option>
+                        <option value="Expense">Expense</option>
+                    </select>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="registerLabel"><b th:text="#{label.user.date}"></b></label>
-                <input th:field="*{datumObveze}" type="datetime-local" class="form-control"/>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('datumObveze')}">
-                    <p th:text="${messageError}">Validation error</p>
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.user.value}"></b></label>
+                    <input th:field="*{vrijednost}" class="form-control"/>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('vrijednost')}">
+                        <p th:text="${messageError}">Validation error</p>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="registerLabel"><b th:text="#{label.obligation.details}"></b></label>
-                <textarea th:field="*{detaljiObveze}" type="" class="form-control"/>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('detaljiObveze')}">
-                    <p th:text="${messageError}">Validation error</p>
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.user.date}"></b></label>
+                    <input th:field="*{datumObveze}" type="datetime-local" class="form-control"/>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('datumObveze')}">
+                        <p th:text="${messageError}">Validation error</p>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="registerLabel"><b th:text="#{label.obligation.category}"></b></label>
-                <select class="form-control" th:field="${obligation.kategorija}">
-                    <option selected th:value="null" th:text="#{label.select.option}"></option>
-                    <option th:each="kategorija : ${kategorije}" th:value="${kategorija.id}"
-                            th:text="${kategorija.naziv}"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="registerLabel"><b th:text="#{label.obligation.user}"></b></label>
-                <select class="form-control" th:field="${obligation.racunKorisnik}">
-                    <option selected th:value="null" th:text="#{label.select.option}"></option>
-                    <span th:each="racun : ${racuni}">
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.obligation.details}"></b></label>
+                    <textarea th:field="*{detaljiObveze}" type="" class="form-control"/>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('detaljiObveze')}">
+                        <p th:text="${messageError}">Validation error</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.obligation.category}"></b></label>
+                    <select class="form-control" th:field="${obligation.kategorija}">
+                        <option selected th:value="null" th:text="#{label.select.option}"></option>
+                        <option th:each="kategorija : ${kategorije}" th:value="${kategorija.id}"
+                                th:text="${kategorija.naziv}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="registerLabel"><b th:text="#{label.obligation.user}"></b></label>
+                    <select class="form-control" th:field="${obligation.racunKorisnik}">
+                        <option selected th:value="null" th:text="#{label.select.option}"></option>
+                        <span th:each="racun : ${racuni}">
                         <option th:each="korisnik : ${racun.korisnici}" th:value="${racun.id + '|' + korisnik.id}"
                                 th:text="${racun.vrstaRacuna + ' - ' + korisnik.ime + ' ' + korisnik.prezime}"></option>
                     </span>
-                </select>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary" type="submit" th:text="#{messages.add.obligations}">reset</button>
-            </div>
-        </form>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit" th:text="#{messages.add.obligations}">reset</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <th:block th:include="/_footer"></th:block>

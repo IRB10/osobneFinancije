@@ -3,6 +3,8 @@ package com.diplomski.osobneFinancije.kontrolori
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsnovnePutanje.Companion.forgotPassword
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsnovnePutanje.Companion.forgotPasswordPage
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsnovnePutanje.Companion.loginPage
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,7 +15,7 @@ import javax.servlet.http.HttpServletRequest
 
 
 @Controller
-class LoginKontrolor {
+class LoginKontrolor(@param:Qualifier("messageSource") private val messages: MessageSource) {
 
     @GetMapping("/login")
     fun login(
@@ -23,7 +25,7 @@ class LoginKontrolor {
     ): String {
         var errorPoruka: String?
         if (error != null) {
-            errorPoruka = "Kriva kombinacija korisničkog imena i lozinke!"
+            errorPoruka = messages.getMessage("messages.wrong.credentials", null, request.locale)
             model.addAttribute("errorPoruka", errorPoruka)
         }
         return loginPage

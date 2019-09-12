@@ -9,7 +9,7 @@
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
 
-<div class="container">
+<div class="container main">
     <div id="login-row" class="row justify-content-center align-items-center">
         <div id="login-column" class="col-md-6">
             <div class="wrap">
@@ -45,6 +45,8 @@
                                     th:text="#{messages.form.update}">
                                 submit
                             </button>
+                            <a class="btn btn-info btn-md loginSignIn" data-tooltip="tooltip" data-placement="bottom"
+                               th:href="@{/user/changePassword}" th:text="#{label.changePassword.title}"></a>
                         </div>
                     </form>
                 </div>

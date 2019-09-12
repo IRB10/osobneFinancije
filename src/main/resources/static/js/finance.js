@@ -83,11 +83,11 @@ function fireUpdate() {
         naziv: $("#obligation0").val(),
         vrijednost: $("#obligation1").val(),
         danPlacanja: $("#obligation2").val(),
-        opis: $("#obligation3").val(),
-        transakcijaOd: $("#obligation4").val(),
-        transakcijaPrema: $("#obligation5").val()
+        detaljiObveze: $("#obligation3").val(),
+        kategorija_id: $("#obligation4").val(),
+        transakcijaPrema: $("#obligation5").val().split("|")[1]
     };
-    if (formData.naziv === "" || formData.vrijednost === "" || formData.opis === "" || formData.danPlacanja === "" || formData.transakcijaOd === "") {
+    if (formData.naziv === "" || formData.vrijednost === "" || formData.opis === "" || formData.danPlacanja === "" || formData.transakcijaPrema === "") {
         document.getElementById("postResultDiv").style.visibility = "visible";
         $("#postResultDiv").html("<strong>Please fill in neccesarry fields</strong>");
     }

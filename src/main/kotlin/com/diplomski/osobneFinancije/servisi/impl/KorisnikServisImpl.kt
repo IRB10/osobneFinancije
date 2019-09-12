@@ -3,10 +3,7 @@ package com.diplomski.osobneFinancije.servisi.impl
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder
 import com.amazonaws.services.lambda.invoke.LambdaInvokerFactory
 import com.diplomski.osobneFinancije.entiteti.*
-import com.diplomski.osobneFinancije.forme.FinancijeForma
-import com.diplomski.osobneFinancije.forme.ProfilForma
-import com.diplomski.osobneFinancije.forme.RacunForma
-import com.diplomski.osobneFinancije.forme.RegistracijaForma
+import com.diplomski.osobneFinancije.forme.*
 import com.diplomski.osobneFinancije.repozitoriji.*
 import com.diplomski.osobneFinancije.servisi.FinancijeServis
 import com.diplomski.osobneFinancije.servisi.KorisnikServis
@@ -39,7 +36,6 @@ import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
-
 @Service
 @Transactional
 class KorisnikServisImpl(
@@ -51,10 +47,43 @@ class KorisnikServisImpl(
     private val racunRepozitorij: RacunRepozitorij,
     private val prijenosRepozitorij: PrijenosRepozitorij,
     private val obavijestiServis: ObavijestiServis,
+    private val kategorijaRepozitorij: KategorijaRepozitorij,
     @param:Qualifier("messageSource") private val poruke: MessageSource,
     private val transactionTemplate: TransactionTemplate,
     @param:Qualifier("jdbcScheduler") private val jdbcScheduler: Scheduler
 ) : KorisnikServis {
+    override fun dohvatiSveKorisnike(): List<Korisnik> {
+        return korisnikRepozitorij.findAll()
+    }
+
+    override fun spremiTransakcijuAJAX(transakcija: FinancijeForma) {
+        val transakcijaBaza = Transakcija()
+        transakcijaBaza.transakcijaOd = SecurityContextHolder.getContext().authentication.name
+        transakcijaBaza.korisnik =
+            korisnikRepozitorij.findByKorisnickoIme(SecurityContextHolder.getContext().authentication.name)
+        transakcijaBaza.transakcijaPrema =
+            korisnikRepozitorij.findById(transakcija.transakcijaPrema.toLong()).get().korisnickoIme
+        transakcijaBaza.kategorija_id = kategorijaRepozitorij.findById(transakcija.kategorija_id!!.toLong()).get()
+        transakcijaBaza.datumKreiranja = LocalDateTime.now()
+        transakcijaBaza.opis = transakcija.detaljiObveze
+        transakcijaBaza.vrijednost = transakcija.vrijednost.toDouble()
+        transakcijaBaza.naziv = transakcija.naziv
+        transakcijaBaza.danPlacanja = LocalDateTime.parse(transakcija.danPlacanja)
+        transakcijaRepozitorij.save(transakcijaBaza)
+    }
+
+    override fun dodajKategoriju(kategorijaForma: KategorijaForma) {
+        val kategorija = Kategorija()
+        kategorija.naziv = kategorijaForma.naziv
+        kategorija.opis = kategorijaForma.opis
+        kategorijaRepozitorij.save(kategorija)
+    }
+
+    override fun staraLozinkuKorisnikaValidna(korisnickoIme: String, staraLozinka: String?): Boolean {
+        var korisnik = korisnikRepozitorij.findByKorisnickoIme(korisnickoIme)
+        return passwordEncoder().matches(staraLozinka, korisnik!!.lozinka)
+    }
+
     override fun dohvatiSveTransakcijeZaDan(): List<Transakcija> {
         return transakcijaRepozitorij.findAll().stream().filter { entry -> checkEntriesForDay(entry) }
             .collect(Collectors.toList<Transakcija>())
@@ -215,14 +244,24 @@ class KorisnikServisImpl(
     override fun azurirajTrosak(korisnik: Korisnik, expense: Float?, kategorija: Kategorija) {
         val response = financijeServis.lambdaOutput(LambdaInput(korisnik.stanjeRacuna, expense!!.toDouble(), "-"))
         korisnik.stanjeRacuna = response.result
-        createEntry("Expense - " + korisnik.id, Math.abs(expense), korisnik.korisnickoIme, kategorija)
+        createEntry(
+            "Expense - " + korisnik.id + " - " + korisnik.id + LocalDateTime.now(),
+            Math.abs(expense),
+            korisnik.korisnickoIme,
+            kategorija
+        )
         korisnikRepozitorij.save(korisnik)
     }
 
     override fun azurirajPrihod(korisnik: Korisnik, income: Float?, kategorija: Kategorija) {
         val response = financijeServis.lambdaOutput(LambdaInput(korisnik.stanjeRacuna, income!!.toDouble(), "+"))
         korisnik.stanjeRacuna = response.result
-        createEntry("Income - " + korisnik.id, Math.abs(income), korisnik.korisnickoIme, kategorija)
+        createEntry(
+            "Income - " + korisnik.id + " - " + LocalDateTime.now(),
+            Math.abs(income),
+            korisnik.korisnickoIme,
+            kategorija
+        )
         korisnikRepozitorij.save(korisnik)
     }
 
@@ -386,7 +425,7 @@ class KorisnikServisImpl(
 
     fun checkIfAlreadyExists(entry: Transakcija, entries: List<Transakcija>): Boolean {
         for (entry1 in entries) {
-            if (entry1.kategorija_id!!.naziv == entry.kategorija_id!!.naziv) {
+            if (entry1.naziv == entry.naziv) {
                 return true
             }
         }
@@ -395,14 +434,14 @@ class KorisnikServisImpl(
 
     private fun checkEntryRange(entry: Transakcija, dateFrom: String, dateTo: String): Boolean {
         val username = SecurityContextHolder.getContext().authentication.name
-        val paymentDate = entry.danPlacanja
+        val paymentDate = entry.danPlacanja!!.toLocalDate()
         return !ObjectUtils.isEmpty(entry.transakcijaOd) && entry.transakcijaOd
             .equals(username) && isDateBetween(paymentDate, dateFrom, dateTo)
     }
 
-    private fun isDateBetween(paymentDate: LocalDateTime?, dateFrom: String, dateTo: String): Boolean {
-        val localDateFrom = LocalDateTime.parse(dateFrom)
-        val localDateTo = LocalDateTime.parse(dateTo)
+    private fun isDateBetween(paymentDate: LocalDate?, dateFrom: String, dateTo: String): Boolean {
+        val localDateFrom = LocalDate.parse(dateFrom)
+        val localDateTo = LocalDate.parse(dateTo)
         return paymentDate!!.isAfter(localDateFrom) && paymentDate.isBefore(localDateTo)
     }
 

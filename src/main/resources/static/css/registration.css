@@ -28,3 +28,7 @@ html, body {
 .registerButton {
     background-color: #ff8400
 }
+
+#inputEmail{
+    width:100%;
+}

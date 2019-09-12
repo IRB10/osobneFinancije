@@ -1,5 +1,6 @@
 package com.diplomski.osobneFinancije.kontrolori
 
+import com.diplomski.osobneFinancije.repozitoriji.KategorijaRepozitorij
 import com.diplomski.osobneFinancije.servisi.KorisnikServis
 import com.diplomski.osobneFinancije.utils.ExcelView
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.csvData
@@ -17,19 +18,27 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.servlet.ModelAndView
 import java.io.IOException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-
 @Controller
-class PodaciKontrolor(private val korisnikServis: KorisnikServis, @param:Qualifier("messageSource") private val messages: MessageSource) {
+class PodaciKontrolor(
+    private val korisnikServis: KorisnikServis, @param:Qualifier("messageSource") private val messages: MessageSource,
+    private val kategorijaRepozitorij: KategorijaRepozitorij
+) {
 
     @PostMapping(value = [csvData])
     @Throws(IOException::class)
-    fun exportEntries(response: HttpServletResponse) {
-        val excelView = ExcelView()
-        excelView.generateExcel(response, HSSFWorkbook(), korisnikServis.dohvatiTransakcijeZaKorisnika())
+    fun exportEntries(response: HttpServletResponse, request: HttpServletRequest) {
+        val excelView = ExcelView(messages, kategorijaRepozitorij, korisnikServis)
+        excelView.generateExcel(
+            response,
+            HSSFWorkbook(),
+            korisnikServis.dohvatiTransakcijeZaKorisnika(),
+            request.locale
+        )
     }
 
     @PostMapping(value = [csvDataImport])
@@ -38,7 +47,7 @@ class PodaciKontrolor(private val korisnikServis: KorisnikServis, @param:Qualifi
         request: HttpServletRequest
     ): String {
         val locale = request.locale
-        val excelView = ExcelView()
+        val excelView = ExcelView(messages, kategorijaRepozitorij, korisnikServis)
         try {
             val entryList = excelView.importExcel(excelDataFile)
             if (korisnikServis.spremiUvezeneTransakcije(entryList) == 0) {
@@ -54,24 +63,27 @@ class PodaciKontrolor(private val korisnikServis: KorisnikServis, @param:Qualifi
             model.addAttribute("errorImport", messages.getMessage("message.error.import", null, locale))
         }
 
-        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcije())
+        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcijeZaKorisnika())
         return overview
     }
 
     @GetMapping(value = [csvData])
     fun showUserHomePage(model: Model): String {
-        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcije())
+        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcijeZaKorisnika())
         return overview
     }
 
     @GetMapping(value = [csvDataImport])
     fun showGetDataImport(model: Model): String {
-        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcije())
+        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcijeZaKorisnika())
         return overview
     }
 
     @GetMapping(displayEntries)
-    fun displaySearch(): String {
-        return "ajax"
+    fun displaySearch(): ModelAndView {
+        val modelAndView = ModelAndView("ajax")
+        modelAndView.addObject("kategorije", kategorijaRepozitorij.findAll())
+        modelAndView.addObject("racuni", korisnikServis.dohvatiSveRacuneDostupneKorisniku())
+        return modelAndView
     }
 }

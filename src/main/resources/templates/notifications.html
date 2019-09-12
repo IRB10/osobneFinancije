@@ -9,13 +9,15 @@
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
 <div class="container">
-    <div th:if="${listaObavijesti != null}">
+    <div th:if="${listaObavijesti != null and !listaObavijesti.isEmpty()}">
         <table class="table table-striped">
             <tr>
-                <th>Message</th>
+                <th th:text="#{label.notification.name}"></th>
+                <th th:text="#{label.notification.date}"></th>
             </tr>
             <tr th:each="obavijest : ${listaObavijesti}">
                 <td th:text="${obavijest.poruka}"></td>
+                <td th:text="${obavijest.kreirano}"></td>
             </tr>
         </table>
     </div>

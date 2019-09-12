@@ -52,32 +52,11 @@ class WebSecurityKonfiguracija(
         http
             .authorizeRequests()
             .antMatchers(
-                login,
-                login_error,
-                basePath,
-                registration,
-                imgAll,
-                cssAll,
-                webjarsAll,
-                jsAll,
-                forgotPassword,
-                updatePassword,
-                registerConfirm,
-                badUser,
-                errorPutanja,
-                resetPassword,
-                updatePassword
+                login, login_error, basePath, registration, imgAll, cssAll, webjarsAll, jsAll, forgotPassword,
+                updatePassword, registerConfirm, badUser, errorPutanja, resetPassword, updatePassword
             )
-            .permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .formLogin()
-            .loginPage(login).defaultSuccessUrl(homepage)
-            .and()
-            .logout()
-            .logoutUrl(logout)
-            .and()
-            .csrf().disable()
+            .permitAll().anyRequest().authenticated().and().formLogin().loginPage(login).defaultSuccessUrl(homepage)
+            .and().logout().logoutUrl(logout).and().csrf().disable()
 
         http.csrf().disable().authorizeRequests().antMatchers("/api/**").hasAnyRole("ROLE_ADMIN", "ROLE_USER").and()
             .httpBasic()

@@ -33,9 +33,28 @@
                         <a class="nav-link" th:if="${#request.userPrincipal != null}" th:href="@{/user/ProfileDetails}"
                            th:text="#{label.menu.profile}"></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:if="${#request.userPrincipal != null}" th:href="@{/user/Finances}"
-                           th:text="#{label.menu.finances}"></a>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" th:if="${#request.userPrincipal != null}"
+                           data-toggle="dropdown" role="button" aria-haspopup="true" th:text="#{label.menu.finances}"
+                           aria-expanded="false">
+                        </a>
+                        <ul class="dropdown-menu notify-drop bg-dark">
+                            <div class="notify-drop-title">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{/user/Finances}" th:text="#{label.menu.finances}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{/user/Categories}" th:text="#{navigation.category}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                        <a class="rIcon allRead nav-link" data-tooltip="tooltip" data-placement="bottom"
+                                           th:href="@{/api/search}" th:text="#{navigation.ajax.transactions}"><i
+                                                class="fa fa-dot-circle-o"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:if="${#request.userPrincipal != null}" th:href="@{/user/Accounts}"

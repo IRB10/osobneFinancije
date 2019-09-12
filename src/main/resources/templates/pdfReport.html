@@ -11,11 +11,11 @@
     <form class="form" th:action="@{/user/pdfReport}" method="POST" target="_blank" enctype="utf8">
         <div class="form-group">
             <label class="registerLabel"><b th:text="#{label.pdf.from}"></b></label>
-            <input type="datetime-local" class="form-control" name="dateFrom"/>
+            <input type="date" class="form-control" name="dateFrom"/>
         </div>
         <div class="form-group">
             <label class="registerLabel"><b th:text="#{label.pdf.to}"></b></label>
-            <input type="datetime-local" class="form-control" name="dateTo"/>
+            <input type="date" class="form-control" name="dateTo"/>
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-info btn-md loginSignIn" th:text="#{label.generate.pdf}">

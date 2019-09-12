@@ -7,7 +7,7 @@
 </head>
 <body>
 <th:block th:include="/_menu"></th:block>
-<div class="container">
+<div class="container main">
     <div class="container clear-top">
         <div class="alert alert-danger" th:if="${errorImport != null}">
             <p th:text="${errorImport}">Validation error</p>
@@ -18,7 +18,7 @@
             <p th:text="${notificationImport}">Validation error</p>
         </div>
     </div>
-    <div th:if="${listaObveza != null}">
+    <div th:if="${listaObveza!=null and !listaObveza.isEmpty()}">
         <table class="table table-striped">
             <tr>
                 <th th:text="#{label.obligation.name}"></th>
@@ -27,14 +27,36 @@
                 <th th:text="#{label.user.date}"></th>
                 <th th:text="#{label.user.transaction.from}"></th>
                 <th th:text="#{label.user.transaction.to}"></th>
+                <th th:text="#{label.obligation.category}"></th>
             </tr>
-            <tr th:each="obeza : ${listaObveza}">
-                <td th:text="${obeza.naziv}"></td>
-                <td th:text="${obeza.vrijednost}"></td>
-                <td th:text="${obeza.opis}"></td>
-                <td th:text="${obeza.danPlacanja}"></td>
-                <td th:text="${obeza.transakcijaOd}"></td>
-                <td th:text="${obeza.transakcijaPrema}"></td>
+            <tr th:each="obveza : ${listaObveza}">
+                <td th:text="${obveza.naziv}"></td>
+                <td th:text="${obveza.vrijednost}"></td>
+                <td th:text="${obveza.opis}"></td>
+                <td th:text="${obveza.danPlacanja}"></td>
+                <td th:text="${obveza.transakcijaOd}"></td>
+                <th:block th:switch="${obveza.transakcijaPrema}">
+                    <div th:case="''">
+                        <td th:utext="'&nbsp;&nbsp;' + ---"></td>
+                    </div>
+                    <div th:case="!null">
+                        <td th:text="${obveza.transakcijaPrema}"></td>
+                    </div>
+                    <div th:case="*">
+                        <td th:text="${obveza.transakcijaPrema}"></td>
+                    </div>
+                </th:block>
+                <th:block th:switch="${obveza.kategorija_id}">
+                    <div th:case="null">
+                        <td th:utext="'&nbsp;&nbsp;' + ---"></td>
+                    </div>
+                    <div th:case="!null">
+                        <td th:text="${obveza.kategorija_id.naziv}"></td>
+                    </div>
+                    <div th:case="*">
+                        <td th:text="${obveza.kategorija_id.naziv}"></td>
+                    </div>
+                </th:block>
             </tr>
         </table>
     </div>

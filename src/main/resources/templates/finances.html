@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title th:text="#{label.menu.finances}"></title>
 </head>
-<body>
 <th:block th:include="/_menu"></th:block>
+<div class="container main">
 <div class="container bg-dark">
     <h1 th:text="#{label.add.income}" class="registerLabel">reset</h1><br/>
     <div class="container clear-top">
@@ -75,6 +75,7 @@
     <a class="container expsenseForm btn btn-primary" th:href="@{/user/Obligations}">
         <button type="button" class="btn btn-primary" th:text="#{messages.add.obligations}">reset</button>
     </a>
+</div>
 </div>
 <th:block th:include="/_footer"></th:block>
 </body>

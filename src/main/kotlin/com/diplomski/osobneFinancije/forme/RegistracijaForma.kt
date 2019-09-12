@@ -33,5 +33,4 @@ class RegistracijaForma {
     fun setPonovljenaLozinka(rPassword: String) {
         this.ponovljenaLozinka = rPassword
     }
-
 }

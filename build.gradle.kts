@@ -41,6 +41,7 @@ dependencies {
 	implementation("io.springfox:springfox-swagger-ui:2.9.2")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("com.github.davidmoten:rxjava2-jdbc:0.2.5")
+	implementation("org.junit.jupiter:junit-jupiter-engine:5.1.0")
 	runtimeOnly("mysql:mysql-connector-java")
 	runtimeOnly("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.6")
 	

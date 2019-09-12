@@ -1,6 +1,7 @@
 package com.diplomski.osobneFinancije.kontrolori.rest
 
 import com.diplomski.osobneFinancije.entiteti.Transakcija
+import com.diplomski.osobneFinancije.forme.FinancijeForma
 import com.diplomski.osobneFinancije.servisi.KorisnikServis
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.apiFinances
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.apiObligations
@@ -36,8 +37,8 @@ class FinancijeRestKontrolor(
         produces = jsonResponseType
     )
     @ApiResponses(value = [ApiResponse(code = 404, message = "Entries cannot be added or updated")])
-    fun addNewObligation(@RequestBody entry: Transakcija) {
-        userService.spremiTransakciju(entry)
+    fun addNewObligation(@RequestBody financijeForma: FinancijeForma) {
+        userService.spremiTransakcijuAJAX(financijeForma)
     }
 
     @GetMapping("/api/transactions/all")

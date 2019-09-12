@@ -13,7 +13,6 @@ import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Component
 import java.util.*
 
-
 @Component
 class SlusacRegistracije : ApplicationListener<ZavrsenaRegistracijaDogadaj> {
     @Autowired

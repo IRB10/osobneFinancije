@@ -68,17 +68,17 @@ class ObavijestiServisImpl(private val obavijestRepozitorij: ObavijestRepozitori
     }
 
     override fun pronadiSveProcitanePoKorisniku(korisnik: Korisnik): List<Obavijest>? {
-        try {
+        return try {
             val notifications = ArrayList<Obavijest>()
             obavijestRepozitorij.findAll().forEach { obavijest ->
                 if (obavijest.procitano && obavijest.korisnik.id === korisnik.id) {
                     notifications.add(obavijest)
                 }
             }
-            return notifications
+            notifications
         } catch (e: Exception) {
             logger.error("Exception occur while fetching Notification by User ", e)
-            return null
+            null
         }
     }
 

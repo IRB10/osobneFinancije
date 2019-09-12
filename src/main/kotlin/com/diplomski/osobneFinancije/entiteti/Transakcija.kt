@@ -45,6 +45,25 @@ data class Transakcija(
         this.korisnik = korisnik_id
     }
 
+    constructor(
+        vrijednost: Double,
+        datumKreiranja: LocalDateTime,
+        kategorija_id: Kategorija,
+        korisnik_id: Korisnik,
+        danPlacanja: LocalDateTime?,
+        transakcijaOd: String?,
+        transakcijaPrema: String?
+    ) : this(
+        vrijednost = vrijednost,
+        datumKreiranja = datumKreiranja,
+        danPlacanja = danPlacanja,
+        transakcijaOd = transakcijaOd,
+        transakcijaPrema = transakcijaPrema
+    ) {
+        this.kategorija_id = kategorija_id
+        this.korisnik = korisnik_id
+    }
+
     constructor(naziv: String?) : this() {
         this.naziv = naziv
     }

@@ -10,7 +10,7 @@
 <div class="container">
     <form class="form" th:action="@{/user/monthReport}" method="POST" enctype="utf8">
         <div class="form-group">
-            <div th:if="${listaObveza != null}">
+            <div th:if="${listaObveza!=null and !listaObveza.isEmpty()}">
                 <table class="table table-striped">
                     <tr>
                         <th th:text="#{label.obligation.name}"></th>
@@ -19,6 +19,7 @@
                         <th th:text="#{label.user.date}"></th>
                         <th th:text="#{label.user.transaction.from}"></th>
                         <th th:text="#{label.user.transaction.to}"></th>
+                        <th th:text="#{label.obligation.category}"></th>
                     </tr>
                     <tr th:each="obligation : ${listaObveza}">
                         <td th:text="${obligation.naziv}"></td>
@@ -26,7 +27,28 @@
                         <td th:text="${obligation.opis}"></td>
                         <td th:text="${obligation.danPlacanja}"></td>
                         <td th:text="${obligation.transakcijaOd}"></td>
-                        <td th:text="${obligation.transakcijaPrema}"></td>
+                        <th:block th:switch="${obligation.transakcijaPrema}">
+                            <div th:case="''">
+                                <td th:utext="'&nbsp;&nbsp;' + ---"></td>
+                            </div>
+                            <div th:case="!null">
+                                <td th:text="${obligation.transakcijaPrema}"></td>
+                            </div>
+                            <div th:case="*">
+                                <td th:text="${obligation.transakcijaPrema}"></td>
+                            </div>
+                        </th:block>
+                        <th:block th:switch="${obligation.kategorija_id}">
+                            <div th:case="null">
+                                <td th:utext="'&nbsp;&nbsp;' + ---"></td>
+                            </div>
+                            <div th:case="!null">
+                                <td th:text="${obligation.kategorija_id.naziv}"></td>
+                            </div>
+                            <div th:case="*">
+                                <td th:text="${obligation.kategorija_id.naziv}"></td>
+                            </div>
+                        </th:block>
                     </tr>
                 </table>
             </div>

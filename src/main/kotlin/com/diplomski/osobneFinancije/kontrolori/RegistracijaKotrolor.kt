@@ -9,6 +9,8 @@ import com.diplomski.osobneFinancije.forme.RegistracijaForma
 import com.diplomski.osobneFinancije.iznimke.KorisnikNijePronadenIznimka
 import com.diplomski.osobneFinancije.servisi.impl.KorisnikServisImpl
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.badUser
+import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.changePassword
+import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.changePasswordPage
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.displayProfile
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.profile
 import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Companion.profileDetails
@@ -159,6 +161,39 @@ class RegistracijaKotrolor(
         korisnik!!.aktivan = true
         korisnikServis.spremiKorisnika(korisnik)
         return ModelAndView(loginPage)
+    }
+
+    @RequestMapping(value = [changePassword], method = [RequestMethod.GET])
+    fun showProfileChangePassword(): ModelAndView {
+        return ModelAndView(changePasswordPage, "user", LozinkaDto())
+    }
+
+    @RequestMapping(value = [changePassword], method = [RequestMethod.POST])
+    fun profileChangePassword(@ModelAttribute("user") @Valid lozinkaDto: LozinkaDto, result: BindingResult): ModelAndView {
+        if (!korisnikServis.staraLozinkuKorisnikaValidna(
+                SecurityContextHolder.getContext().authentication.name,
+                lozinkaDto.staraLozinka
+            )
+        ) {
+            result.rejectValue("staraLozinka", "messages.old.password.incorrect")
+            return ModelAndView(changePasswordPage, "user", lozinkaDto)
+        }
+        return if (result.hasErrors()) {
+            result.globalErrors.forEach { f ->
+                if ("PasswordMatches".contains(Objects.requireNonNull(f.code)!!)) {
+                    result.rejectValue("lozinka", "message.passError")
+                }
+            }
+            ModelAndView(changePasswordPage, "user", lozinkaDto)
+        } else {
+            val korisnik =
+                korisnikServis.pronadiPoKorisnickomImenu(SecurityContextHolder.getContext().authentication.name)
+            if (korisnik != null) {
+                korisnikServis.promijeniLozinkuKorisniku(korisnik, lozinkaDto.lozinka!!)
+            }
+            SecurityContextHolder.clearContext()
+            ModelAndView(loginPage)
+        }
     }
 
     @RequestMapping(value = [savePassword], method = [RequestMethod.POST])

@@ -20,6 +20,13 @@ data class Obavijest(
     @ManyToOne
     lateinit var korisnik: Korisnik
 
+    constructor(poruka: String?, kreirano: Date?, korisnik: Korisnik, procitano: Boolean) : this(){
+        this.poruka  = poruka
+        this.kreirano  = kreirano
+        this.korisnik  = korisnik
+        this.procitano = procitano
+    }
+
     constructor(poruka: String?, kreirano: Date?, korisnik: Korisnik) : this(){
         this.poruka  = poruka
         this.kreirano  = kreirano
