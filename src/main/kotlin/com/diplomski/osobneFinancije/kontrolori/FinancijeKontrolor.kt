@@ -175,9 +175,9 @@ class FinancijeKontrolor(
 
     @PostMapping(value = [pdfReport], produces = [MediaType.APPLICATION_PDF_VALUE])
     fun citiesReport(request: HttpServletRequest): ResponseEntity<InputStreamResource> {
-        val dateFrom = request.getParameter("dateFrom")
-        val dateTo = request.getParameter("dateTo")
-        val byteArrayInputStream = korisnikServis.generirajPdfZaRasponDatuma(dateFrom, dateTo)
+        val datumOd = request.getParameter("dateFrom")
+        val datumDo = request.getParameter("dateTo")
+        val byteArrayInputStream = korisnikServis.generirajPdfZaRasponDatuma(datumOd, datumDo)
         val headers = HttpHeaders()
         headers.add("Content-Disposition", "inline; filename=obligationReport.pdf")
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
