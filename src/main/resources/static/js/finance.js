@@ -29,13 +29,9 @@ function fire_ajax_submit() {
 
                     var amount = $("<td/>");
                     var span1 = $("<span/>");
-                    span1.text(entry[i].naziv);
+                    span1.text(entry[i].vrijednost);
                     amount.append(span1);
 
-                    var payday = $("<td/>");
-                    var span2 = $("<span/>");
-                    span2.text(entry[i].danPlacanja);
-                    payday.append(span2);
 
                     var details = $("<td/>");
                     var span3 = $("<span/>");
@@ -55,7 +51,6 @@ function fire_ajax_submit() {
                     $("#added-articles").append($('<tr class="clickable-row" id="row"/>')
                         .append($('<td/>').html("<span>" + entry[i].naziv + "</span>"))
                         .append(amount)
-                        .append(payday)
                         .append(details)
                         .append(tranFrom)
                         .append(tranTo)
