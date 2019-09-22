@@ -80,7 +80,7 @@ class KorisnikServisImpl(
     }
 
     override fun staraLozinkuKorisnikaValidna(korisnickoIme: String, staraLozinka: String?): Boolean {
-        var korisnik = korisnikRepozitorij.findByKorisnickoIme(korisnickoIme)
+        val korisnik = korisnikRepozitorij.findByKorisnickoIme(korisnickoIme)
         return passwordEncoder().matches(staraLozinka, korisnik!!.lozinka)
     }
 
@@ -234,11 +234,11 @@ class KorisnikServisImpl(
         }
     }
 
-    override fun generirajPdfZaRasponDatuma(datumOd: String, datumDo: String): ByteArrayInputStream {
+    override fun generirajPdfZaRasponDatuma(datumOd: String, datumDo: String, locale: Locale): ByteArrayInputStream {
         val entries =
             dohvatiTransakcijeZaKorisnika().stream().filter { entry -> checkEntryRange(entry, datumOd, datumDo) }
                 .collect(Collectors.toList<Transakcija>())
-        return GeneratorPdfIzvjesca.entriesReport(entries)
+        return GeneratorPdfIzvjesca.entriesReport(entries, poruke, locale)
     }
 
     override fun azurirajTrosak(korisnik: Korisnik, expense: Float?, kategorija: Kategorija) {

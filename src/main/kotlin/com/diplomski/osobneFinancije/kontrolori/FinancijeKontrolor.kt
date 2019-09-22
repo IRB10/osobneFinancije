@@ -177,7 +177,7 @@ class FinancijeKontrolor(
     fun citiesReport(request: HttpServletRequest): ResponseEntity<InputStreamResource> {
         val datumOd = request.getParameter("dateFrom")
         val datumDo = request.getParameter("dateTo")
-        val byteArrayInputStream = korisnikServis.generirajPdfZaRasponDatuma(datumOd, datumDo)
+        val byteArrayInputStream = korisnikServis.generirajPdfZaRasponDatuma(datumOd, datumDo, request.locale)
         val headers = HttpHeaders()
         headers.add("Content-Disposition", "inline; filename=obligationReport.pdf")
         return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)

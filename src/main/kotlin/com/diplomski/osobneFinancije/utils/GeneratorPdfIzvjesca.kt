@@ -5,48 +5,57 @@ import com.itextpdf.text.*
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
 import com.itextpdf.text.pdf.PdfWriter
+import org.springframework.context.MessageSource
 import org.springframework.util.ObjectUtils
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 
 class GeneratorPdfIzvjesca {
     companion object {
         @JvmStatic
-        public fun entriesReport(entries: List<Transakcija>): ByteArrayInputStream {
+        fun entriesReport(entries: List<Transakcija>, messages: MessageSource, locale: Locale): ByteArrayInputStream {
             val document = Document()
             val out = ByteArrayOutputStream()
 
             try {
                 val table = PdfPTable(6)
+                table.headerRows = 1
                 table.widthPercentage = 90f
                 table.setWidths(intArrayOf(4, 3, 3, 3, 3, 3))
 
                 val headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD)
 
                 var hcell: PdfPCell
-                hcell = PdfPCell(Phrase("Obligation naziv", headFont))
+                hcell = PdfPCell(Phrase(messages.getMessage("label.obligation.name", null, locale), headFont))
                 hcell.horizontalAlignment = Element.ALIGN_CENTER
+                hcell.backgroundColor = BaseColor.GRAY
                 table.addCell(hcell)
 
-                hcell = PdfPCell(Phrase("Amount", headFont))
+                hcell = PdfPCell(Phrase(messages.getMessage("label.obligation.amount", null, locale), headFont))
                 hcell.horizontalAlignment = Element.ALIGN_CENTER
+                hcell.backgroundColor = BaseColor.GRAY
                 table.addCell(hcell)
 
-                hcell = PdfPCell(Phrase("Obligation details", headFont))
+                hcell = PdfPCell(Phrase(messages.getMessage("label.obligation.details", null, locale), headFont))
                 hcell.horizontalAlignment = Element.ALIGN_CENTER
+                hcell.backgroundColor = BaseColor.GRAY
                 table.addCell(hcell)
 
-                hcell = PdfPCell(Phrase("Obligation date", headFont))
+                hcell = PdfPCell(Phrase(messages.getMessage("label.user.date", null, locale), headFont))
                 hcell.horizontalAlignment = Element.ALIGN_CENTER
+                hcell.backgroundColor = BaseColor.GRAY
                 table.addCell(hcell)
 
-                hcell = PdfPCell(Phrase("Transaction from", headFont))
+                hcell = PdfPCell(Phrase(messages.getMessage("label.user.transaction.from", null, locale), headFont))
                 hcell.horizontalAlignment = Element.ALIGN_CENTER
+                hcell.backgroundColor = BaseColor.GRAY
                 table.addCell(hcell)
 
-                hcell = PdfPCell(Phrase("Transaction to", headFont))
+                hcell = PdfPCell(Phrase(messages.getMessage("label.user.transaction.to", null, locale), headFont))
                 hcell.horizontalAlignment = Element.ALIGN_CENTER
+                hcell.backgroundColor = BaseColor.GRAY
                 table.addCell(hcell)
 
                 for (entry in entries) {

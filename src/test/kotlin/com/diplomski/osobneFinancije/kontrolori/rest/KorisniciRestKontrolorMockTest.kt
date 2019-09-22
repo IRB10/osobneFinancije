@@ -8,12 +8,12 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.runners.MockitoJUnitRunner
+import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.security.core.Authentication
 import javax.servlet.http.HttpServletRequest
 
 
-@RunWith(MockitoJUnitRunner.Silent::class)
+@RunWith(MockitoJUnitRunner::class)
 class KorisniciRestKontrolorMockTest {
     @Mock
     internal var userService: KorisnikServis? = Mockito.mock(KorisnikServis::class.java)

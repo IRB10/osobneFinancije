@@ -37,7 +37,7 @@ interface KorisnikServis : UserDetailsService {
         locale: Locale
     )
 
-    fun generirajPdfZaRasponDatuma(datumOd: String, datumDo: String): ByteArrayInputStream
+    fun generirajPdfZaRasponDatuma(datumOd: String, datumDo: String, locale: Locale): ByteArrayInputStream
     fun azurirajTrosak(korisnik: Korisnik, expense: Float?, kategorija: Kategorija)
     fun azurirajPrihod(korisnik: Korisnik, income: Float?, kategorija: Kategorija)
     fun dohvatiRacuneKorisnika(): List<Racun>

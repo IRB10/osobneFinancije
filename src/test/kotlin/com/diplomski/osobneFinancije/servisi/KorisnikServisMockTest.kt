@@ -14,12 +14,11 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.mockito.runners.MockitoJUnitRunner
+import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.context.MessageSource
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
@@ -80,7 +79,7 @@ class KorisnikServisMockTest {
         assertEquals("testSurname", createdUserAccount.prezime)
         assertEquals(Korisnik::class.java, createdUserAccount.javaClass)
         assertNull(createdUserAccount.lozinka)
-        assertEquals(0.0,createdUserAccount.stanjeRacuna, 0.0)
+        assertEquals(0.0, createdUserAccount.stanjeRacuna, 0.0)
     }
 
     @Test
@@ -92,21 +91,23 @@ class KorisnikServisMockTest {
                     LocalDateTime.parse("2019-09-12T15:00:05.045"),
                     Kategorija(1),
                     Korisnik(1),
-                    LocalDateTime.parse("2019-09-12T15:00:05.045"),"irb10","antevu"
+                    LocalDateTime.parse("2019-09-12T15:00:05.045"), "irb10", "antevu"
                 ),
-                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX,"antevu","irb10")
+                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX, "antevu", "irb10")
             )
         )
         val entryList = ArrayList<Transakcija>()
-        entryList.add(Transakcija(
-            2.0,
-            LocalDateTime.parse("2019-09-12T15:00:05.045"),
-            Kategorija(1),
-            Korisnik(1),
-            LocalDateTime.parse("2019-09-12T15:00:05.045"),"irb10","antevu"
-        ))
         entryList.add(
-            Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX,"antevu","irb10")
+            Transakcija(
+                2.0,
+                LocalDateTime.parse("2019-09-12T15:00:05.045"),
+                Kategorija(1),
+                Korisnik(1),
+                LocalDateTime.parse("2019-09-12T15:00:05.045"), "irb10", "antevu"
+            )
+        )
+        entryList.add(
+            Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX, "antevu", "irb10")
         )
         assertEquals(entryList.size, korisnikServisImpl!!.dohvatiSveTransakcije().size)
     }
@@ -120,10 +121,10 @@ class KorisnikServisMockTest {
                     LocalDateTime.now(),
                     Kategorija(1),
                     Korisnik(1),
-                    LocalDateTime.parse("2019-09-12T15:00:05.045"),"antevu","irb10"
+                    LocalDateTime.parse("2019-09-12T15:00:05.045"), "antevu", "irb10"
                 ),
-                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX,"antevu","irb10"),
-                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MIN,"antevu","irb10")
+                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX, "antevu", "irb10"),
+                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MIN, "antevu", "irb10")
             )
         )
         val entryList = ArrayList<Transakcija>()
@@ -134,7 +135,7 @@ class KorisnikServisMockTest {
                     LocalDateTime.now(),
                     Kategorija(1),
                     Korisnik(1),
-                    LocalDateTime.parse("2019-09-12T15:00:05.045"),"antevu","irb10"
+                    LocalDateTime.parse("2019-09-12T15:00:05.045"), "antevu", "irb10"
                 )
             )
 
@@ -150,10 +151,10 @@ class KorisnikServisMockTest {
                     LocalDateTime.now(),
                     Kategorija(1),
                     Korisnik(1),
-                    LocalDateTime.parse("2019-09-12T15:00:05.045"),"antevu","irb10"
+                    LocalDateTime.parse("2019-09-12T15:00:05.045"), "antevu", "irb10"
                 ),
-                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX,"antevu","irb10"),
-                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MIN,"antevu","irb10")
+                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX, "antevu", "irb10"),
+                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MIN, "antevu", "irb10")
             )
         )
         val entryList = ArrayList<Transakcija>()
@@ -164,7 +165,7 @@ class KorisnikServisMockTest {
                     LocalDateTime.now(),
                     Kategorija(1),
                     Korisnik(1),
-                    LocalDateTime.parse("2019-09-12T15:00:05.045"),"antevu","irb10"
+                    LocalDateTime.parse("2019-09-12T15:00:05.045"), "antevu", "irb10"
                 )
             )
 
@@ -180,10 +181,10 @@ class KorisnikServisMockTest {
                     LocalDateTime.now(),
                     Kategorija(1),
                     Korisnik(1),
-                    LocalDateTime.parse("2019-09-12T15:00:05.045"),"antevu","irb10"
+                    LocalDateTime.parse("2019-09-12T15:00:05.045"), "antevu", "irb10"
                 ),
-                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX,"antevu","irb10"),
-                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MIN,"antevu","irb10")
+                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX, "antevu", "irb10"),
+                Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MIN, "antevu", "irb10")
             )
         )
         val entryList = ArrayList<Transakcija>()
@@ -194,11 +195,31 @@ class KorisnikServisMockTest {
                     LocalDateTime.now(),
                     Kategorija(1),
                     Korisnik(1),
-                    LocalDateTime.parse("2019-09-12T15:00:05.045"),"antevu","irb10"
+                    LocalDateTime.parse("2019-09-12T15:00:05.045"), "antevu", "irb10"
                 )
             )
-        entryList.add(Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX,"antevu","irb10"))
-        entryList.add(Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MIN,"antevu","irb10"))
+        entryList.add(
+            Transakcija(
+                3.0,
+                LocalDateTime.now(),
+                Kategorija(1),
+                Korisnik(1),
+                LocalDateTime.MAX,
+                "antevu",
+                "irb10"
+            )
+        )
+        entryList.add(
+            Transakcija(
+                3.0,
+                LocalDateTime.now(),
+                Kategorija(1),
+                Korisnik(1),
+                LocalDateTime.MIN,
+                "antevu",
+                "irb10"
+            )
+        )
         assertEquals(entryList.size, korisnikServisImpl!!.dohvatiTransakcijeZaKorisnika().size)
     }
 
@@ -210,17 +231,17 @@ class KorisnikServisMockTest {
                 LocalDateTime.now(),
                 Kategorija(1),
                 Korisnik(1),
-                LocalDateTime.parse("2019-09-12T15:00:05.045"),"antevu","irb10"
+                LocalDateTime.parse("2019-09-12T15:00:05.045"), "antevu", "irb10"
             ),
-            Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX,"antevu","irb10"),
-            Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MIN,"antevu","irb10")
+            Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MAX, "antevu", "irb10"),
+            Transakcija(3.0, LocalDateTime.now(), Kategorija(1), Korisnik(1), LocalDateTime.MIN, "antevu", "irb10")
         )
         val entry = Transakcija(
             2.0,
             LocalDateTime.now(),
             Kategorija(1),
             Korisnik(1),
-            LocalDateTime.parse("2019-09-12T15:00:05.045"),"antevu","irb10"
+            LocalDateTime.parse("2019-09-12T15:00:05.045"), "antevu", "irb10"
         )
         assertTrue(korisnikServisImpl!!.checkIfAlreadyExists(entry, entryList))
 
