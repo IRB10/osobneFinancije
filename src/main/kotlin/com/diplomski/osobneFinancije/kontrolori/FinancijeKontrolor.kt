@@ -21,6 +21,7 @@ import com.diplomski.osobneFinancije.utils.Konstante.Putanje.OsiguranePutanje.Co
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.MessageSource
 import org.springframework.core.io.InputStreamResource
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -32,9 +33,13 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.servlet.ModelAndView
 import java.sql.Timestamp
 import java.time.LocalDateTime
+import java.util.*
+import java.util.stream.Collectors
+import java.util.stream.IntStream
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
@@ -114,11 +119,28 @@ class FinancijeKontrolor(
     }
 
     @GetMapping(value = [homepage])
-    fun showUserHomePage(model: Model): String {
+    fun showUserHomePage(
+        model: Model,
+        @RequestParam("page") page: Optional<Int>,
+        @RequestParam("size") size: Optional<Int>
+    ): String {
         val korisnik = korisnikServis.pronadiPoKorisnickomImenu(SecurityContextHolder.getContext().authentication.name)
         korisnik!!.datum_prijave = Timestamp.valueOf(LocalDateTime.now())
         korisnikServis.spremiKorisnika(korisnik)
-        model.addAttribute("listaObveza", korisnikServis.dohvatiTransakcijeZaKorisnika())
+        val currentPage = page.orElse(1)
+        val pageSize = size.orElse(5)
+
+        val listaObveza = korisnikServis.stranicenjeTransakcija(PageRequest.of(currentPage - 1, pageSize), korisnikServis.dohvatiTransakcijeZaKorisnika())
+
+        model.addAttribute("listaObveza", listaObveza)
+
+        val totalPages = listaObveza.totalPages
+        if (totalPages > 0) {
+            val pageNumbers = IntStream.rangeClosed(1, totalPages)
+                .boxed()
+                .collect(Collectors.toList())
+            model.addAttribute("pageNumbers", pageNumbers)
+        }
         return overview
     }
 

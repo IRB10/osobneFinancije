@@ -8,7 +8,7 @@
 <body>
 <!-- Include _menu.html -->
 <th:block th:include="/_menu"></th:block>
-<div class="container">
+<div class="container main">
     <div th:if="${listaObavijesti != null and !listaObavijesti.isEmpty()}">
         <table class="table table-striped">
             <tr>
@@ -20,6 +20,12 @@
                 <td th:text="${obavijest.kreirano}"></td>
             </tr>
         </table>
+    </div>
+    <div th:if="${listaObavijesti.totalPages > 0}" class="pagination"
+         th:each="pageNumber : ${pageNumbers}">
+        <a th:href="@{/user/oldNotifications(size=${listaObavijesti.size}, page=${pageNumber})}"
+           th:text=${pageNumber}
+           th:class="${pageNumber==listaObavijesti.number + 1} ? active"></a>
     </div>
 </div>
 <th:block th:include="/_footer"></th:block>

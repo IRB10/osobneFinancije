@@ -7,40 +7,42 @@
 </head>
 <body>
 <th:block th:include="/_menu"></th:block>
-<div class="alert alert-info">
+<div class="container main">
+    <div class="alert alert-info">
     <span> <a th:href="@{/user/createAccount}"
               th:text="#{label.create.account}"></a></span>
-</div>
-<div th:if="${!listaRacuna.isEmpty()}">
-    <table class="table">
-        <thead>
-        <tr>
-            <th> Naziv</th>
-            <th> Opis</th>
-            <th> Aktivan</th>
-            <th> Iznos</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="racun : ${listaRacuna}">
-            <td th:switch="${racun.vrstaRacuna}">
-                <span th:case="BCA" th:text="#{label.accountType.BCA}"></span>
-                <span th:case="SA" th:text="#{label.accountType.SA}"></span>
-                <span th:case="IBCA" th:text="#{label.accountType.IBCA}"></span>
-                <span th:case="MMA" th:text="#{label.accountType.MMA}"></span>
-                <span th:case="CD" th:text="#{label.accountType.CD}"></span>
-                <span th:case="IRA" th:text="#{label.accountType.IRA}"></span>
-                <span th:case="BA" th:text="#{label.accountType.BA}"></span>
-            </td>
-            <td><span th:text="${racun.opis}"> Opis </span></td>
-            <td th:switch="${racun.aktivan}">
-                <span th:case="true" th:text="#{label.accountType.active}"></span>
-                <span th:case="false" th:text="#{label.accountType.inactive}"></span>
-            </td>
-            <td><span th:text="${racun.iznos}"> Iznos </span></td>
-        </tr>
-        </tbody>
-    </table>
+    </div>
+    <div th:if="${!listaRacuna.isEmpty()}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th> Naziv</th>
+                <th> Opis</th>
+                <th> Aktivan</th>
+                <th> Iznos</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="racun : ${listaRacuna}">
+                <td th:switch="${racun.vrstaRacuna}">
+                    <span th:case="BCA" th:text="#{label.accountType.BCA}"></span>
+                    <span th:case="SA" th:text="#{label.accountType.SA}"></span>
+                    <span th:case="IBCA" th:text="#{label.accountType.IBCA}"></span>
+                    <span th:case="MMA" th:text="#{label.accountType.MMA}"></span>
+                    <span th:case="CD" th:text="#{label.accountType.CD}"></span>
+                    <span th:case="IRA" th:text="#{label.accountType.IRA}"></span>
+                    <span th:case="BA" th:text="#{label.accountType.BA}"></span>
+                </td>
+                <td><span th:text="${racun.opis}"> Opis </span></td>
+                <td th:switch="${racun.aktivan}">
+                    <span th:case="true" th:text="#{label.accountType.active}"></span>
+                    <span th:case="false" th:text="#{label.accountType.inactive}"></span>
+                </td>
+                <td><span th:text="${racun.iznos}"> Iznos </span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <th:block th:include="/_footer"></th:block>
 </body>

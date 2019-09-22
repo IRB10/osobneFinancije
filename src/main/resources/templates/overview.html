@@ -60,6 +60,12 @@
             </tr>
         </table>
     </div>
+    <div th:if="${listaObveza.totalPages > 0}" class="pagination"
+         th:each="pageNumber : ${pageNumbers}">
+        <a th:href="@{/user/home(size=${listaObveza.size}, page=${pageNumber})}"
+           th:text=${pageNumber}
+           th:class="${pageNumber==listaObveza.number + 1} ? active"></a>
+    </div>
     <div class="container">
         <form th:action="@{/user/csvData}" method="POST" target="_blank">
             <div class="form-group">

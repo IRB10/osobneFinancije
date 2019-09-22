@@ -5,12 +5,30 @@ import com.diplomski.osobneFinancije.entiteti.Obavijest
 import com.diplomski.osobneFinancije.repozitoriji.ObavijestRepozitorij
 import com.diplomski.osobneFinancije.servisi.ObavijestiServis
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
 
 
 @Service
 class ObavijestiServisImpl(private val obavijestRepozitorij: ObavijestRepozitorij) : ObavijestiServis {
+    override fun stranicenjeObavijesti(pageable: Pageable, obavijesti: List<Obavijest>): Page<Obavijest> {
+        val pageSize = pageable.pageSize
+        val currentPage = pageable.pageNumber
+        val startItem = currentPage * pageSize
+        val listaPom: List<Obavijest>
+
+        listaPom = if (obavijesti.size < startItem) {
+            Collections.emptyList<Obavijest>()
+        } else {
+            val toIndex = Math.min(startItem + pageSize, obavijesti.size)
+            obavijesti.subList(startItem, toIndex)
+        }
+        return PageImpl<Obavijest>(listaPom, PageRequest.of(currentPage, pageSize), obavijesti.size.toLong())
+    }
 
     companion object {
 

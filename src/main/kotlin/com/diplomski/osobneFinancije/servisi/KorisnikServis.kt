@@ -2,6 +2,8 @@ package com.diplomski.osobneFinancije.servisi
 
 import com.diplomski.osobneFinancije.entiteti.*
 import com.diplomski.osobneFinancije.forme.*
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.security.core.userdetails.UserDetailsService
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -62,4 +64,6 @@ interface KorisnikServis : UserDetailsService {
     fun dohvatiSveTransakcijeReaktivno(): Flux<Transakcija>
     fun staraLozinkuKorisnikaValidna(korisnickoIme: String, staraLozinka: String?): Boolean
     fun dodajKategoriju(kategorijaForma: KategorijaForma)
+
+    fun stranicenjeTransakcija(pageable:Pageable, transakcije : List<Transakcija>) : Page<Transakcija>
 }

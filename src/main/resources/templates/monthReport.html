@@ -7,8 +7,8 @@
 </head>
 <body>
 <th:block th:include="/_menu"></th:block>
-<div class="container">
-    <form class="form" th:action="@{/user/monthReport}" method="POST" enctype="utf8">
+<div class="container main">
+    <form class="form" th:action="@{/user/monthReport}" method="GET" enctype="utf8">
         <div class="form-group">
             <div th:if="${listaObveza!=null and !listaObveza.isEmpty()}">
                 <table class="table table-striped">
@@ -51,6 +51,12 @@
                         </th:block>
                     </tr>
                 </table>
+            </div>
+            <div th:if="${listaObveza.totalPages > 0}" class="pagination"
+                 th:each="pageNumber : ${pageNumbers}">
+                <a th:href="@{/user/monthReport(size=${listaObveza.size}, page=${pageNumber}, month=${monthCurrent})}"
+                   th:text=${pageNumber}
+                   th:class="${pageNumber==listaObveza.number + 1} ? active"></a>
             </div>
         </div>
         <div class="form-group">

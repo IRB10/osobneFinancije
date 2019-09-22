@@ -13,6 +13,10 @@ import com.diplomski.osobneFinancije.utils.Konstante.EntryDetails.Companion.entr
 import com.diplomski.osobneFinancije.utils.Konstante.TimeManagament.Companion.ONE_MINUTE_IN_MILLIS
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.MessageSource
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -52,6 +56,23 @@ class KorisnikServisImpl(
     private val transactionTemplate: TransactionTemplate,
     @param:Qualifier("jdbcScheduler") private val jdbcScheduler: Scheduler
 ) : KorisnikServis {
+
+
+    override fun stranicenjeTransakcija(pageable: Pageable, transakcije : List<Transakcija>): Page<Transakcija> {
+        val pageSize = pageable.pageSize
+        val currentPage = pageable.pageNumber
+        val startItem = currentPage * pageSize
+        val listaPom: List<Transakcija>
+
+        listaPom = if (transakcije.size < startItem) {
+            Collections.emptyList<Transakcija>()
+        } else {
+            val toIndex = Math.min(startItem + pageSize, transakcije.size)
+            transakcije.subList(startItem, toIndex)
+        }
+        return PageImpl<Transakcija>(listaPom, PageRequest.of(currentPage, pageSize), transakcije.size.toLong())
+    }
+
     override fun dohvatiSveKorisnike(): List<Korisnik> {
         return korisnikRepozitorij.findAll()
     }
@@ -482,7 +503,7 @@ class KorisnikServisImpl(
             racunPrema!!.iznos -= transakcija.vrijednost
             korisnikOd!!.stanjeRacuna += transakcija.vrijednost
             obavijestiServis.stvoriObavijestObjekt(
-                poruke.getMessage("label.pay.troskovi", null, locale) + korisnikOd!!.korisnickoIme,
+                poruke.getMessage("label.pay.income", null, locale) + korisnikOd!!.korisnickoIme,
                 korisnikPrema!!
             )
             obavijestiServis.stvoriObavijestObjekt(
@@ -496,11 +517,11 @@ class KorisnikServisImpl(
             racunPrema!!.iznos += transakcija.vrijednost
             korisnikOd!!.stanjeRacuna -= transakcija.vrijednost
             obavijestiServis.stvoriObavijestObjekt(
-                poruke.getMessage("label.pay.troskovi", null, locale) + korisnikPrema!!.korisnickoIme,
+                poruke.getMessage("label.pay.expense", null, locale) + korisnikPrema!!.korisnickoIme,
                 korisnikOd!!
             )
             obavijestiServis.stvoriObavijestObjekt(
-                poruke.getMessage("label.pay.income", null, locale) + korisnikOd.korisnickoIme,
+                poruke.getMessage("label.pay.expense", null, locale) + korisnikOd.korisnickoIme,
                 korisnikPrema
             )
             prijenosRepozitorij.save(Prijenos(transakcija, racunPrema!!))
